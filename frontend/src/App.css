@@ -34,3 +34,17 @@ th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid #e5
 .detail-action { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
 .detail-action label { display: flex; flex-direction: column; font-size: 0.85rem; gap: 0.25rem; }
 .hint { color: #475569; font-size: 0.85rem; }
+
+.history { margin-top: 1.25rem; border-top: 1px solid #e5e7eb; padding-top: 0.75rem; }
+.history h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+.events { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.event { border-left: 3px solid #94a3b8; padding: 0.25rem 0.75rem; background: #f8fafc; }
+.event-comentario { border-left-color: #1d4ed8; }
+.event-asignacion { border-left-color: #0f766e; }
+.event-cambio_estado { border-left-color: #b45309; }
+.event-tipo { font-weight: 600; font-size: 0.85rem; margin-right: 0.5rem; }
+.event-meta { color: #475569; font-size: 0.8rem; }
+.event p { margin: 0.25rem 0 0; }
+.comment-form { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+.comment-form label { display: flex; flex-direction: column; width: 100%; font-size: 0.85rem; gap: 0.25rem; }
+.comment-form textarea { width: 100%; box-sizing: border-box; }
