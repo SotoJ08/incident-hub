@@ -8,14 +8,18 @@ import IncidentList from '../src/components/IncidentList.jsx';
 const technicians = [{ id: 2, nombre: 'Luis Tecnico' }, { id: 3, nombre: 'Marta Tecnica' }];
 const base = { id: 7, titulo: 'Laptop no enciende', descripcion: 'Sin energia', category_id: 1, prioridad: 'BAJA', estado: 'NUEVO', tecnico_id: null };
 
+// Las escrituras (PATCH) devuelven `response`; las lecturas del historial devuelven una lista vacia
 function mockPatch(response, ok = true) {
-  const fetchMock = vi.fn(async () => ({ ok, status: ok ? 200 : 409, json: async () => response }));
+  const fetchMock = vi.fn(async (url, init) => {
+    if (init?.method === 'PATCH') return { ok, status: ok ? 200 : 409, json: async () => response };
+    return { ok: true, json: async () => [] };
+  });
   vi.stubGlobal('fetch', fetchMock);
   return fetchMock;
 }
 
 const lastCall = (fetchMock) => {
-  const [url, init] = fetchMock.mock.calls.at(-1);
+  const [url, init] = fetchMock.mock.calls.filter((c) => c[1]?.method === 'PATCH').at(-1);
   return { url, method: init.method, body: JSON.parse(init.body) };
 };
 
@@ -72,7 +76,7 @@ describe('IncidentDetail', () => {
 
   it('sin actor seleccionado deshabilita las acciones', () => {
     renderDetail({ ...base, estado: 'ASIGNADO', tecnico_id: 2 }, { actorId: null });
-    expect(screen.getByText(/Seleccione quién actúa/)).toBeInTheDocument();
+    expect(screen.getByText(/para poder operar el incidente/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'EN_PROCESO' })).toBeDisabled();
   });
 
@@ -93,7 +97,8 @@ describe('IncidentList con detalle', () => {
     const fetchMock = vi.fn(async (url, init) => {
       if (init?.method === 'PATCH') return { ok: true, json: async () => ({ ...inc, estado: 'EN_PROCESO' }) };
       const body = url.startsWith('/api/categories') ? [{ id: 1, nombre: 'Equipo', parent_id: null }]
-        : url.startsWith('/api/users') ? technicians : [inc];
+        : url.startsWith('/api/users') ? technicians
+        : url.includes('/events') ? [] : [inc];
       return { ok: true, json: async () => body };
     });
     vi.stubGlobal('fetch', fetchMock);
