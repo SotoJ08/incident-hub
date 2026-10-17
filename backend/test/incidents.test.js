@@ -70,3 +70,11 @@ test('JSON malformado responde 400', async () => {
   const res = await api.post('/api/incidents').set('Content-Type', 'application/json').send('{no-json');
   assert.strictEqual(res.status, 400);
 });
+
+test('GET lista primero el incidente mas reciente (AB#358)', async () => {
+  const api = await setup();
+  const a = await api.post('/api/incidents').send({ ...valido, titulo: 'primero' });
+  const b = await api.post('/api/incidents').send({ ...valido, titulo: 'segundo' });
+  const list = await api.get('/api/incidents');
+  assert.deepStrictEqual(list.body.map((i) => i.id), [b.body.id, a.body.id]);
+});

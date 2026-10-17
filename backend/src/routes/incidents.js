@@ -2,6 +2,7 @@ const express = require('express');
 
 const PRIORIDADES = ['BAJA', 'MEDIA', 'ALTA', 'URGENTE', 'CRITICA'];
 const ESTADOS = ['NUEVO', 'ASIGNADO', 'EN_PROCESO', 'RESUELTO', 'CERRADO'];
+const ORDEN_LISTADO = 'created_at ASC, id ASC';
 
 function validateNew(body) {
   const errors = [];
@@ -61,7 +62,7 @@ function incidentsRouter(db) {
         else add(name, Number(value));
       }
       if (errors.length) return res.status(400).json({ errors });
-      const sql = `SELECT * FROM incidents${where.length ? ' WHERE ' + where.join(' AND ') : ''} ORDER BY created_at DESC, id DESC`;
+      const sql = `SELECT * FROM incidents${where.length ? ' WHERE ' + where.join(' AND ') : ''} ORDER BY ${ORDEN_LISTADO}`;
       const { rows } = await db.query(sql, params);
       res.json(rows);
     } catch (e) { next(e); }
