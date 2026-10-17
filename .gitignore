@@ -14,3 +14,4 @@ devops/agent/
 *.pem
 *.pfx
 test-results.xml
+frontend/test-results.xml

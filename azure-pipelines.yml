@@ -16,6 +16,7 @@ pool:
 variables:
   nodeVersion: '22.x'
   workingDir: backend
+  frontendDir: frontend
 
 stages:
   - stage: CI
@@ -56,14 +57,46 @@ stages:
             displayName: Revision de dependencias (npm audit, falla en high/critical)
             workingDirectory: $(workingDir)
 
+          - script: npm ci
+            displayName: Frontend - instalar dependencias
+            workingDirectory: $(frontendDir)
+
+          - script: npm run build
+            displayName: Frontend - build
+            workingDirectory: $(frontendDir)
+
+          - script: npm run test:ci
+            displayName: Frontend - pruebas
+            workingDirectory: $(frontendDir)
+
+          - task: PublishTestResults@2
+            displayName: Frontend - publicar resultados de pruebas
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: $(frontendDir)/test-results.xml
+              failTaskOnFailedTests: true
+
+          - script: npm audit --audit-level=high
+            displayName: Frontend - revision de dependencias
+            workingDirectory: $(frontendDir)
+
           - task: ArchiveFiles@2
-            displayName: Empaquetar artefacto
+            displayName: Empaquetar backend
             inputs:
               rootFolderOrFile: $(workingDir)/dist
               includeRootFolder: false
               archiveType: zip
               archiveFile: $(Build.ArtifactStagingDirectory)/incident-hub-backend-$(Build.BuildId).zip
 
+          - task: ArchiveFiles@2
+            displayName: Empaquetar frontend
+            inputs:
+              rootFolderOrFile: $(frontendDir)/dist
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/incident-hub-frontend-$(Build.BuildId).zip
+
           - publish: $(Build.ArtifactStagingDirectory)
             displayName: Publicar artefacto
-            artifact: incident-hub-backend
+            artifact: incident-hub
