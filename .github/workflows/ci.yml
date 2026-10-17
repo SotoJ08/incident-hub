@@ -1,0 +1,53 @@
+# Workflow complementario (AB#353): valida cada PR y cada push a main
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Pruebas y dependencias del backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Revision de dependencias (falla en high/critical)
+        run: npm audit --audit-level=high
+
+  referencias-workitem:
+    name: Referencia a Work Item (AB#ID)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar AB#ID en titulo o rama del PR
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.head_ref }}
+        run: |
+          if echo "$PR_TITLE $PR_BRANCH" | grep -Eq 'AB#[0-9]+|[0-9]{3,}'; then
+            echo "Referencia a Work Item encontrada"
+          else
+            echo "::error::El PR debe referenciar un Work Item (AB#ID en el titulo o ID en el nombre de la rama)"
+            exit 1
+          fi
