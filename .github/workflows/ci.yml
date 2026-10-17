@@ -35,6 +35,33 @@ jobs:
       - name: Revision de dependencias (falla en high/critical)
         run: npm audit --audit-level=high
 
+  frontend:
+    name: Pruebas, build y dependencias del frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Revision de dependencias (falla en high/critical)
+        run: npm audit --audit-level=high
+
   referencias-workitem:
     name: Referencia a Work Item (AB#ID)
     if: github.event_name == 'pull_request'
