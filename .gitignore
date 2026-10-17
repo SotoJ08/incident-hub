@@ -13,3 +13,4 @@ coverage/
 devops/agent/
 *.pem
 *.pfx
+test-results.xml
