@@ -11,9 +11,9 @@ export function fetchIncidents(filters = {}) {
   return getJson(`/api/incidents${qs ? `?${qs}` : ''}`);
 }
 
-async function patchJson(url, body) {
+async function sendJson(method, url, body) {
   const res = await fetch(url, {
-    method: 'PATCH',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
@@ -23,9 +23,12 @@ async function patchJson(url, body) {
 }
 
 export const assignIncident = (id, tecnico_id, autor_id) =>
-  patchJson(`/api/incidents/${id}/assign`, { tecnico_id, autor_id });
+  sendJson('PATCH', `/api/incidents/${id}/assign`, { tecnico_id, autor_id });
 export const changeStatus = (id, estado, autor_id) =>
-  patchJson(`/api/incidents/${id}/status`, { estado, autor_id });
+  sendJson('PATCH', `/api/incidents/${id}/status`, { estado, autor_id });
+export const fetchEvents = (id) => getJson(`/api/incidents/${id}/events`);
+export const addComment = (id, comentario, autor_id) =>
+  sendJson('POST', `/api/incidents/${id}/comments`, { comentario, autor_id });
 export const fetchUsers = () => getJson('/api/users');
 export const fetchStats = () => getJson('/api/stats');
 export const fetchCategories = () => getJson('/api/categories');

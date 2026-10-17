@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { assignIncident, changeStatus } from '../api.js';
 import { TRANSICIONES, ESTADOS_ASIGNABLES } from '../constants.js';
+import IncidentHistory from './IncidentHistory.jsx';
 
 // Panel de operacion de un incidente: asignar tecnico y avanzar de estado.
 // actorId es quien realiza la accion (se registra en la bitacora).
@@ -80,6 +81,13 @@ export default function IncidentDetail({ incident, technicians, actorId, onUpdat
         </div>
       )}
       {siguientes.length === 0 && <p className="hint">El incidente está cerrado: no admite más cambios.</p>}
+
+      <IncidentHistory
+        incidentId={incident.id}
+        actorId={actorId}
+        refreshKey={`${incident.estado}-${incident.tecnico_id}`}
+        cerrado={incident.estado === 'CERRADO'}
+      />
     </aside>
   );
 }
