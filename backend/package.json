@@ -1,0 +1,17 @@
+{
+  "name": "incident-hub-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API REST de IT Incident Hub",
+  "main": "src/migrate.js",
+  "scripts": {
+    "migrate": "node src/migrate.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "pg-mem": "^3.0.5"
+  }
+}
