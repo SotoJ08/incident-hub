@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: incident_hub
+      POSTGRES_USER: ${DB_USER:-incident}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD en su entorno o archivo .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:
