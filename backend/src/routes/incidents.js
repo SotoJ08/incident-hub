@@ -39,9 +39,30 @@ function incidentsRouter(db) {
     } catch (e) { next(e); }
   });
 
+  // Filtros opcionales: estado, prioridad, category_id, tecnico_id (se combinan con AND)
   router.get('/', async (req, res, next) => {
     try {
-      const { rows } = await db.query('SELECT * FROM incidents ORDER BY created_at DESC, id DESC');
+      const { estado, prioridad, category_id, tecnico_id } = req.query;
+      const errors = [];
+      const where = [];
+      const params = [];
+      const add = (col, value) => { params.push(value); where.push(`${col} = $${params.length}`); };
+      if (estado !== undefined) {
+        if (!ESTADOS.includes(estado)) errors.push(`estado debe ser uno de: ${ESTADOS.join(', ')}`);
+        else add('estado', estado);
+      }
+      if (prioridad !== undefined) {
+        if (!PRIORIDADES.includes(prioridad)) errors.push(`prioridad debe ser una de: ${PRIORIDADES.join(', ')}`);
+        else add('prioridad', prioridad);
+      }
+      for (const [name, value] of [['category_id', category_id], ['tecnico_id', tecnico_id]]) {
+        if (value === undefined) continue;
+        if (!/^\d+$/.test(String(value))) errors.push(`${name} debe ser un entero`);
+        else add(name, Number(value));
+      }
+      if (errors.length) return res.status(400).json({ errors });
+      const sql = `SELECT * FROM incidents${where.length ? ' WHERE ' + where.join(' AND ') : ''} ORDER BY created_at DESC, id DESC`;
+      const { rows } = await db.query(sql, params);
       res.json(rows);
     } catch (e) { next(e); }
   });
