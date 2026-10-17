@@ -2,7 +2,7 @@ const express = require('express');
 
 const PRIORIDADES = ['BAJA', 'MEDIA', 'ALTA', 'URGENTE', 'CRITICA'];
 const ESTADOS = ['NUEVO', 'ASIGNADO', 'EN_PROCESO', 'RESUELTO', 'CERRADO'];
-const ORDEN_LISTADO = 'created_at ASC, id ASC';
+const ORDEN_LISTADO = 'created_at DESC, id DESC';
 
 function validateNew(body) {
   const errors = [];
