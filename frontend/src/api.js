@@ -11,5 +11,6 @@ export function fetchIncidents(filters = {}) {
   return getJson(`/api/incidents${qs ? `?${qs}` : ''}`);
 }
 
+export const fetchStats = () => getJson('/api/stats');
 export const fetchCategories = () => getJson('/api/categories');
 export const fetchTechnicians = () => getJson('/api/users?rol=TECNICO');
