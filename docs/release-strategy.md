@@ -16,8 +16,8 @@ Un mismo artefacto (`incident-hub`: ZIP de backend y frontend) se **construye un
 | Ambiente | Environment en Azure DevOps | Disparo | Control |
 |---|---|---|---|
 | dev | `incident-hub-dev` | Automático al terminar el CI en `main` | Pipeline verde |
-| staging | `incident-hub-staging` | Tras dev correcto | **Aprobación manual** + restricción a la rama `main` |
-| prod | `incident-hub-prod` | Tras staging correcto | **Aprobación manual** + restricción a la rama `main` |
+| staging | `incident-hub-staging` | Tras dev correcto | **Aprobación manual** (check *Approval* configurado) |
+| prod | `incident-hub-prod` | Tras staging correcto | **Aprobación manual** (check *Approval* configurado) |
 
 - Las ramas `feature/*`, `fix/*` y `refactor/*` ejecutan solo el CI: los *stages* de despliegue tienen la condición `Build.SourceBranch == refs/heads/main`.
 - Cada despliegue deja un release versionado en `<agente>/_work/deploy/<ambiente>/<version>-b<build>/` con `backend/`, `frontend/` y `release.json` (versión, build, commit y fecha). `current.json` apunta al release vigente y al anterior.
@@ -49,6 +49,8 @@ El rollback intercambia `actual` y `anterior`, por lo que también se puede reve
 - [ ] Tag `vX.Y.Z` y notas de la versión.
 
 ## Configuración de los environments (una sola vez)
-Pipelines -> Environments -> crear `incident-hub-dev`, `incident-hub-staging` y `incident-hub-prod`. En staging y prod: *Approvals and checks* -> **Approvals** (aprobador: responsable del release) y **Branch control** (solo `refs/heads/main`).
+Pipelines -> Environments -> `incident-hub-dev`, `incident-hub-staging` e `incident-hub-prod` (ya creados). En staging y prod hay un check **Approval** (aprobador: responsable del release, espera máxima 12 h).
+
+Mejora recomendada, aún no configurada: añadir en staging y prod el check **Branch control** (solo `refs/heads/main`). Hoy la restricción a `main` la garantiza la condición de los *stages* de despliegue; el check lo reforzaría a nivel de ambiente.
 
 Al ser un proyecto individual, el aprobador es la misma persona que ejecuta el pipeline; por eso el equipo simula roles (ver README) y la aprobación queda registrada con su fecha en el historial de la corrida.
