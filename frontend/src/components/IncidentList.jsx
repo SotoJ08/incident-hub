@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { fetchIncidents, fetchCategories, fetchTechnicians } from '../api.js';
 import Filters from './Filters.jsx';
 import IncidentDetail from './IncidentDetail.jsx';
+import IncidentForm from './IncidentForm.jsx';
 
 const EMPTY = { estado: '', prioridad: '', category_id: '', tecnico_id: '' };
 
 export default function IncidentList({ actorId = null }) {
   const [selectedId, setSelectedId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [created, setCreated] = useState(null);
   const [filters, setFilters] = useState(EMPTY);
   const [incidents, setIncidents] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -28,7 +32,7 @@ export default function IncidentList({ actorId = null }) {
       .catch((e) => { if (!cancelled) setError(e.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [filters]);
+  }, [filters, reloadKey]);
 
   const categoryName = (id) => categories.find((c) => c.id === id)?.nombre ?? id;
   const techName = (id) => (id == null ? 'Sin asignar' : technicians.find((t) => t.id === id)?.nombre ?? id);
@@ -37,6 +41,23 @@ export default function IncidentList({ actorId = null }) {
 
   return (
     <section>
+      <div className="list-actions">
+        <button type="button" aria-expanded={showForm} onClick={() => setShowForm((v) => !v)}>
+          {showForm ? 'Cancelar' : 'Nuevo incidente'}
+        </button>
+        {created && <p role="status" className="success">Incidente #{created.id} creado.</p>}
+      </div>
+      {showForm && (
+        <IncidentForm
+          categories={categories}
+          actorId={actorId}
+          onCreated={(incident) => {
+            setCreated(incident);
+            setShowForm(false);
+            setReloadKey((k) => k + 1); // recarga la lista respetando los filtros activos
+          }}
+        />
+      )}
       <Filters
         filters={filters}
         onChange={(name, value) => setFilters((f) => ({ ...f, [name]: value }))}
