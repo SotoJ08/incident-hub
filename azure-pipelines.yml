@@ -118,3 +118,53 @@ stages:
           - publish: $(Build.ArtifactStagingDirectory)
             displayName: Publicar artefacto
             artifact: incident-hub
+
+  # Despliegue por ambientes: solo desde main. Los controles (aprobaciones y restriccion de rama)
+  # se configuran en Pipelines > Environments; ver docs/release-strategy.md.
+  - stage: Deploy_Dev
+    displayName: Desplegar a dev (automatico)
+    dependsOn: CI
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: Dev
+        displayName: Despliegue dev
+        environment: incident-hub-dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: devops/pipelines/deploy-steps.yml
+                  parameters:
+                    entorno: dev
+
+  - stage: Deploy_Staging
+    displayName: Desplegar a staging (requiere aprobacion)
+    dependsOn: Deploy_Dev
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: Staging
+        displayName: Despliegue staging
+        environment: incident-hub-staging
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: devops/pipelines/deploy-steps.yml
+                  parameters:
+                    entorno: staging
+
+  - stage: Deploy_Prod
+    displayName: Desplegar a produccion (requiere aprobacion)
+    dependsOn: Deploy_Staging
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: Prod
+        displayName: Despliegue produccion
+        environment: incident-hub-prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: devops/pipelines/deploy-steps.yml
+                  parameters:
+                    entorno: prod
