@@ -12,7 +12,7 @@ const REGLAS = [
   { id: 'token-slack', re: /\bxox[abprs]-[A-Za-z0-9-]{10,}\b/ },
   // PAT de Azure DevOps: 52 caracteres base32 (a-z y 2-7) precedidos de pat/token/key
   { id: 'pat-azure-devops', re: /(?:pat|token|key)\w*\s*[:=]\s*['"]?[a-z2-7]{52}\b/i },
-  // Credenciales dentro de una URL: esquema://usuario:clave@host (se ignoran marcadores <...>, ${...} y $(...))
+  // Credenciales embebidas en una URL (usuario y clave antes de la arroba); se ignoran marcadores <...>, ${...} y $(...)
   { id: 'credencial-en-url', re: /:\/\/[^\s:@/]+:(?![<$])[^\s@/<$]{3,}@/ },
   // Asignaciones literales de password/secret/token con valor no vacio y no parametrizado
   { id: 'asignacion-secreta', re: /\b(?:password|passwd|secret|api[_-]?key|token)\b\s*[:=]\s*['"](?![<$])[^'"\s]{8,}['"]/i },
