@@ -13,10 +13,16 @@ pr:
 pool:
   name: Default
 
+# El variable group "incident-hub-secrets" (Pipelines > Library) guarda los secretos como
+# variables protegidas; nunca se escriben valores en este archivo (AB#355, docs/security.md).
 variables:
-  nodeVersion: '22.x'
-  workingDir: backend
-  frontendDir: frontend
+  - group: incident-hub-secrets
+  - name: nodeVersion
+    value: '22.x'
+  - name: workingDir
+    value: backend
+  - name: frontendDir
+    value: frontend
 
 stages:
   - stage: CI
@@ -32,6 +38,18 @@ stages:
             displayName: Instalar Node $(nodeVersion)
             inputs:
               version: $(nodeVersion)
+
+          - script: node devops/scripts/check-secrets.js
+            displayName: Escaner de secretos en el repositorio
+
+          - script: node --test "tests/*.test.js"
+            displayName: Pruebas de utilidades DevOps
+
+          # Los secretos no llegan solos a los scripts: se mapean explicitamente con env
+          - script: node devops/scripts/verify-secret.js DB_PASSWORD
+            displayName: Verificar secreto DB_PASSWORD del variable group
+            env:
+              DB_PASSWORD: $(DB_PASSWORD)
 
           - script: npm ci
             displayName: Instalar dependencias

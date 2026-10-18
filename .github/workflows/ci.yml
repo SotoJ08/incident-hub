@@ -11,6 +11,29 @@ permissions:
   contents: read
 
 jobs:
+  secretos:
+    name: Escaner de secretos y GitHub Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pruebas de utilidades DevOps
+        run: node --test "tests/*.test.js"
+
+      - name: Escaner de secretos en el repositorio
+        run: node devops/scripts/check-secrets.js
+
+      # Los secrets no se entregan a PR de forks; solo se verifican en push a main
+      - name: Verificar el secret DB_PASSWORD
+        if: github.event_name == 'push'
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: node devops/scripts/verify-secret.js DB_PASSWORD
+
   backend:
     name: Pruebas y dependencias del backend
     runs-on: ubuntu-latest
