@@ -3,6 +3,7 @@ const { incidentsRouter } = require('./routes/incidents');
 const { incidentActionsRouter } = require('./routes/incident-actions');
 const { incidentHistoryRouter } = require('./routes/incident-history');
 const { statsRouter } = require('./routes/stats');
+const { workflowRouter } = require('./routes/workflow-route');
 const { catalogsRouter } = require('./routes/catalogs');
 
 // db: cualquier objeto con .query(sql, params) (pg.Pool en produccion, pg-mem en pruebas)
@@ -14,6 +15,7 @@ function createApp(db) {
   app.use('/api/incidents', incidentActionsRouter(db));
   app.use('/api/incidents', incidentHistoryRouter(db));
   app.use('/api/stats', statsRouter(db));
+  app.use('/api/workflow', workflowRouter());
   app.use('/api', catalogsRouter(db));
   app.use((req, res) => res.status(404).json({ errors: ['ruta no encontrada'] }));
   // eslint-disable-next-line no-unused-vars
