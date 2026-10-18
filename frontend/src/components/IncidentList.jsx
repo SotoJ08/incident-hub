@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchIncidents, fetchCategories, fetchTechnicians } from '../api.js';
+import { fetchIncidents, fetchCategories, fetchTechnicians, fetchWorkflow } from '../api.js';
 import Filters from './Filters.jsx';
 import IncidentDetail from './IncidentDetail.jsx';
 import IncidentForm from './IncidentForm.jsx';
@@ -15,12 +15,13 @@ export default function IncidentList({ actorId = null }) {
   const [incidents, setIncidents] = useState([]);
   const [categories, setCategories] = useState([]);
   const [technicians, setTechnicians] = useState([]);
+  const [workflow, setWorkflow] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchTechnicians()])
-      .then(([c, t]) => { setCategories(c); setTechnicians(t); })
+    Promise.all([fetchCategories(), fetchTechnicians(), fetchWorkflow()])
+      .then(([c, t, w]) => { setCategories(c); setTechnicians(t); setWorkflow(w); })
       .catch((e) => setError(e.message));
   }, []);
 
@@ -95,6 +96,7 @@ export default function IncidentList({ actorId = null }) {
         <IncidentDetail
           incident={selected}
           technicians={technicians}
+          workflow={workflow}
           actorId={actorId}
           onUpdated={replaceIncident}
           onClose={() => setSelectedId(null)}

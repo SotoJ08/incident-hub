@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { assignIncident, changeStatus } from '../api.js';
-import { TRANSICIONES, ESTADOS_ASIGNABLES } from '../constants.js';
 import IncidentHistory from './IncidentHistory.jsx';
 
 // Panel de operacion de un incidente: asignar tecnico y avanzar de estado.
 // actorId es quien realiza la accion (se registra en la bitacora).
-export default function IncidentDetail({ incident, technicians, actorId, onUpdated, onClose }) {
+// workflow son las reglas del backend (GET /api/workflow); sin ellas no se ofrecen acciones.
+export default function IncidentDetail({ incident, technicians, workflow, actorId, onUpdated, onClose }) {
   const [tecnicoId, setTecnicoId] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
 
-  const siguientes = TRANSICIONES[incident.estado] ?? [];
-  const puedeAsignar = ESTADOS_ASIGNABLES.includes(incident.estado);
+  const siguientes = workflow?.transiciones?.[incident.estado] ?? [];
+  const puedeAsignar = workflow?.asignables?.includes(incident.estado) ?? false;
   const sinActor = actorId == null;
   const sinTecnico = incident.tecnico_id == null;
 
@@ -80,7 +80,8 @@ export default function IncidentDetail({ incident, technicians, actorId, onUpdat
           {sinTecnico && <span className="hint">Asigne un técnico primero.</span>}
         </div>
       )}
-      {siguientes.length === 0 && <p className="hint">El incidente está cerrado: no admite más cambios.</p>}
+      {workflow && siguientes.length === 0 && <p className="hint">El incidente está cerrado: no admite más cambios.</p>}
+      {!workflow && <p className="hint">Cargando reglas del flujo…</p>}
 
       <IncidentHistory
         incidentId={incident.id}
