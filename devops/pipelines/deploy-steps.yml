@@ -1,0 +1,30 @@
+# Pasos de despliegue compartidos por dev, staging y prod (AB#357).
+# El artefacto "incident-hub" se descarga solo en $(Pipeline.Workspace)/incident-hub.
+# Despliegue sobre el agente autohospedado: cada ambiente es una carpeta versionada en $(Agent.WorkFolder)/deploy.
+parameters:
+  - name: entorno
+    type: string
+
+steps:
+  - checkout: self
+    displayName: Checkout (scripts de despliegue)
+
+  - task: UseNode@1
+    displayName: Instalar Node
+    inputs:
+      version: $(nodeVersion)
+
+  - script: >
+      node devops/scripts/deploy.js desplegar
+      --entorno ${{ parameters.entorno }}
+      --artefacto "$(Pipeline.Workspace)/incident-hub"
+      --raiz "$(Agent.WorkFolder)/deploy"
+      --build $(Build.BuildId)
+      --commit $(Build.SourceVersion)
+    displayName: Desplegar a ${{ parameters.entorno }}
+
+  - script: >
+      node devops/scripts/deploy.js estado
+      --entorno ${{ parameters.entorno }}
+      --raiz "$(Agent.WorkFolder)/deploy"
+    displayName: Validar despliegue en ${{ parameters.entorno }}
