@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import IncidentDetail from '../src/components/IncidentDetail.jsx';
 import IncidentList from '../src/components/IncidentList.jsx';
+import { WORKFLOW } from './fixtures.js';
 
 const technicians = [{ id: 2, nombre: 'Luis Tecnico' }, { id: 3, nombre: 'Marta Tecnica' }];
 const base = { id: 7, titulo: 'Laptop no enciende', descripcion: 'Sin energia', category_id: 1, prioridad: 'BAJA', estado: 'NUEVO', tecnico_id: null };
@@ -25,7 +26,7 @@ const lastCall = (fetchMock) => {
 
 const renderDetail = (incident = base, props = {}) => {
   const onUpdated = vi.fn();
-  render(<IncidentDetail incident={incident} technicians={technicians} actorId={4} onUpdated={onUpdated} onClose={() => {}} {...props} />);
+  render(<IncidentDetail incident={incident} technicians={technicians} workflow={WORKFLOW} actorId={4} onUpdated={onUpdated} onClose={() => {}} {...props} />);
   return onUpdated;
 };
 
@@ -68,6 +69,20 @@ describe('IncidentDetail', () => {
     expect(screen.queryByLabelText('Técnico')).not.toBeInTheDocument();
   });
 
+  it('sin las reglas del backend no ofrece acciones y lo indica', () => {
+    renderDetail({ ...base, estado: 'ASIGNADO', tecnico_id: 2 }, { workflow: null });
+    expect(screen.getByText('Cargando reglas del flujo…')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'EN_PROCESO' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Reasignar' })).not.toBeInTheDocument();
+  });
+
+  it('usa las transiciones recibidas del backend, no una copia local', () => {
+    const custom = { ...WORKFLOW, transiciones: { ...WORKFLOW.transiciones, NUEVO: ['EN_PROCESO'] } };
+    renderDetail({ ...base, tecnico_id: 2 }, { workflow: custom });
+    expect(screen.getByRole('button', { name: 'EN_PROCESO' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'ASIGNADO' })).not.toBeInTheDocument();
+  });
+
   it('un incidente CERRADO no ofrece acciones', () => {
     renderDetail({ ...base, estado: 'CERRADO', tecnico_id: 2 });
     expect(screen.getByText(/no admite más cambios/)).toBeInTheDocument();
@@ -98,6 +113,7 @@ describe('IncidentList con detalle', () => {
       if (init?.method === 'PATCH') return { ok: true, json: async () => ({ ...inc, estado: 'EN_PROCESO' }) };
       const body = url.startsWith('/api/categories') ? [{ id: 1, nombre: 'Equipo', parent_id: null }]
         : url.startsWith('/api/users') ? technicians
+        : url.startsWith('/api/workflow') ? WORKFLOW
         : url.includes('/events') ? [] : [inc];
       return { ok: true, json: async () => body };
     });

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import IncidentList from '../src/components/IncidentList.jsx';
+import { WORKFLOW } from './fixtures.js';
 
 const categories = [{ id: 1, nombre: 'Equipo de computo', parent_id: null }, { id: 2, nombre: 'Sistema Institucional', parent_id: null }];
 const technicians = [{ id: 2, nombre: 'Luis Tecnico', rol: 'TECNICO' }, { id: 3, nombre: 'Marta Tecnica', rol: 'TECNICO' }];
@@ -13,7 +14,9 @@ const incidents = [
 
 function mockApi(listResponse = incidents) {
   const fetchMock = vi.fn(async (url) => {
-    const body = url.startsWith('/api/categories') ? categories : url.startsWith('/api/users') ? technicians : listResponse;
+    const body = url.startsWith('/api/categories') ? categories
+      : url.startsWith('/api/users') ? technicians
+      : url.startsWith('/api/workflow') ? WORKFLOW : listResponse;
     return { ok: true, json: async () => body };
   });
   vi.stubGlobal('fetch', fetchMock);

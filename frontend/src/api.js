@@ -26,6 +26,8 @@ export const assignIncident = (id, tecnico_id, autor_id) =>
   sendJson('PATCH', `/api/incidents/${id}/assign`, { tecnico_id, autor_id });
 export const changeStatus = (id, estado, autor_id) =>
   sendJson('PATCH', `/api/incidents/${id}/status`, { estado, autor_id });
+// Reglas del flujo (transiciones y estados asignables): fuente unica en el backend
+export const fetchWorkflow = () => getJson('/api/workflow');
 export const createIncident = (data) => sendJson('POST', '/api/incidents', data);
 export const fetchEvents = (id) => getJson(`/api/incidents/${id}/events`);
 export const addComment = (id, comentario, autor_id) =>
