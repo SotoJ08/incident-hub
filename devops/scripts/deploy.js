@@ -95,10 +95,16 @@ function extraerZip(zip, destino) {
   execFileSync(tar, ['-xf', zip, '-C', destino], { stdio: 'inherit' });
 }
 
-function buscarZip(dir, prefijo) {
-  const encontrados = fs.readdirSync(dir).filter((f) => f.startsWith(prefijo) && f.endsWith('.zip'));
-  exige(encontrados.length === 1, `se esperaba un zip ${prefijo}*.zip en ${dir} y hay ${encontrados.length}`);
-  return path.join(dir, encontrados[0]);
+// Devuelve el zip "<componente>-<build>.zip" de la build indicada. En un agente autohospedado el workspace
+// no se limpia entre corridas y la carpeta puede conservar zips de builds anteriores (AB#371), por eso
+// se busca el nombre exacto y no solo el prefijo.
+function buscarZip(dir, componente, buildId) {
+  exige(buildId, 'falta --build para ubicar el artefacto de esta corrida');
+  const nombre = `${componente}-${buildId}.zip`;
+  const archivo = path.join(dir, nombre);
+  const presentes = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.zip')) : [];
+  exige(fs.existsSync(archivo), `no se encontro ${nombre} en ${dir} (hay: ${presentes.join(', ') || 'ningun zip'})`);
+  return archivo;
 }
 
 function opciones(argv) {
@@ -107,7 +113,7 @@ function opciones(argv) {
   return o;
 }
 
-module.exports = { ENTORNOS, verificarBackend, verificarFrontend, prepararRelease, rollback, estado };
+module.exports = { ENTORNOS, verificarBackend, verificarFrontend, prepararRelease, rollback, estado, buscarZip };
 
 if (require.main === module) {
   const [comando, ...resto] = process.argv.slice(2);
@@ -116,8 +122,8 @@ if (require.main === module) {
     if (comando === 'desplegar') {
       exige(o.artefacto && o.raiz && o.entorno, 'faltan --artefacto, --raiz o --entorno');
       const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'incident-hub-'));
-      extraerZip(buscarZip(o.artefacto, 'incident-hub-backend-'), path.join(tmp, 'backend'));
-      extraerZip(buscarZip(o.artefacto, 'incident-hub-frontend-'), path.join(tmp, 'frontend'));
+      extraerZip(buscarZip(o.artefacto, 'incident-hub-backend', o.build), path.join(tmp, 'backend'));
+      extraerZip(buscarZip(o.artefacto, 'incident-hub-frontend', o.build), path.join(tmp, 'frontend'));
       const m = prepararRelease({
         backendDir: path.join(tmp, 'backend'), frontendDir: path.join(tmp, 'frontend'),
         raiz: o.raiz, entorno: o.entorno, buildId: o.build, commit: o.commit,

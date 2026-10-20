@@ -10,6 +10,10 @@ Cada entrada indica los Work Items (`AB#ID`) y Pull Requests que la componen. Lo
 ## [Sin publicar]
 - Pendiente para 1.0.0: README completo, documentación de arquitectura, validación final y aprobación a producción.
 
+## [0.9.1] - 2026-10-20
+### Corregido
+- El despliegue fallaba en el agente autohospedado cuando la carpeta del artefacto conservaba ZIP de corridas anteriores («hay 2»): ahora se usa el ZIP exacto de la build actual (Bug AB#371, PR #22). Fallo real detectado por la run #34 de `main`.
+
 ## [0.9.0] - 2026-10-20 (candidata a 1.0.0)
 ### Añadido
 - Versionado SemVer unificado: backend y frontend en la misma versión; `CHANGELOG.md` y prueba de coherencia de versiones (AB#356).
@@ -68,5 +72,6 @@ Cada entrada indica los Work Items (`AB#ID`) y Pull Requests que la componen. Lo
 | v0.6.0 | `be33033` | Deuda técnica resuelta |
 | v0.7.0 | `b924d7b` | Secretos |
 | v0.8.0 | `fd0bb21` | Ambientes y aprobaciones |
-| v0.9.0 | commit de este PR | Versionado y candidata a 1.0.0 |
+| v0.9.0 | `e52604c` | Versionado y candidata a 1.0.0 |
+| v0.9.1 | commit de este PR | Corrección del despliegue con ZIP de builds anteriores |
 | v1.0.0 | pendiente | Release final |
