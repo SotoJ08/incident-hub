@@ -3,7 +3,35 @@ const assert = require('node:assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { prepararRelease, rollback, estado, verificarBackend, verificarFrontend } = require('../devops/scripts/deploy');
+const { prepararRelease, rollback, estado, verificarBackend, verificarFrontend, buscarZip } = require('../devops/scripts/deploy');
+
+// Carpeta de artefactos como la deja un agente autohospedado: zips de varias builds conviviendo
+function carpetaConZips(...builds) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'zips-test-'));
+  for (const b of builds) {
+    fs.writeFileSync(path.join(dir, `incident-hub-backend-${b}.zip`), 'x');
+    fs.writeFileSync(path.join(dir, `incident-hub-frontend-${b}.zip`), 'x');
+  }
+  return dir;
+}
+
+test('buscarZip elige el zip de la build actual aunque haya zips de builds anteriores (AB#371)', () => {
+  const dir = carpetaConZips(32, 34);
+  assert.strictEqual(path.basename(buscarZip(dir, 'incident-hub-backend', 34)), 'incident-hub-backend-34.zip');
+  assert.strictEqual(path.basename(buscarZip(dir, 'incident-hub-frontend', '32')), 'incident-hub-frontend-32.zip');
+});
+
+test('buscarZip no confunde builds con el mismo prefijo numerico', () => {
+  const dir = carpetaConZips(3, 34);
+  assert.strictEqual(path.basename(buscarZip(dir, 'incident-hub-backend', 3)), 'incident-hub-backend-3.zip');
+});
+
+test('buscarZip informa que zips hay cuando falta el de la build y exige el numero de build', () => {
+  const dir = carpetaConZips(32);
+  assert.throws(() => buscarZip(dir, 'incident-hub-backend', 40), /no se encontro incident-hub-backend-40\.zip.*incident-hub-backend-32\.zip/);
+  assert.throws(() => buscarZip(dir, 'incident-hub-backend'), /falta --build/);
+  assert.throws(() => buscarZip(path.join(dir, 'no-existe'), 'incident-hub-backend', 1), /ningun zip/);
+});
 
 // Crea un "artefacto" ya extraido: backend y frontend minimos con la version indicada
 function artefacto(version = '1.2.3') {
