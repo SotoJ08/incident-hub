@@ -7,9 +7,13 @@ PR -> revisión -> main -> CI (build, pruebas, audit, escáner) -> artefacto -> 
 Un mismo artefacto (`incident-hub`: ZIP de backend y frontend) se **construye una vez** y se promueve entre ambientes; no se recompila para cada ambiente.
 
 ## Versionado
-- Semantic Versioning `vMAJOR.MINOR.PATCH`, secuencia hasta `v1.0.0`; la versión vive en `backend/package.json` y cada despliegue se identifica como `<version>-b<build>`.
-- Hitos (equivalen a las entregas parciales dentro de un único repositorio): `v0.1.0` fin de la semana 1, `v0.5.0` fin de la semana 2, `v1.0.0` fin de la semana 3.
-- Los tags se crean sobre `main` una vez que el pipeline está en verde.
+- Semantic Versioning `vMAJOR.MINOR.PATCH`. La versión vive en `backend/package.json` y `frontend/package.json` (siempre la misma) y cada despliegue se identifica como `<version>-b<build>`.
+- **Cuándo sube cada número:** `MINOR` al fusionar una funcionalidad o mejora de proceso nueva; `PATCH` al fusionar una corrección (`fix/*`); `MAJOR` queda reservado para cambios incompatibles tras `v1.0.0`.
+- **Secuencia real:** `0.1.0 -> 0.2.0 -> 0.2.1 (fix) -> 0.3.0 -> 0.4.0 -> 0.5.0 -> 0.6.0 -> 0.7.0 -> 0.8.0 -> 0.9.0 (candidata) -> 1.0.0`. El detalle, con Work Items y PR por versión, está en [CHANGELOG.md](../CHANGELOG.md).
+- **Hitos equivalentes a las entregas parciales** (un único repositorio): `v0.1.0` primeros módulos (semana 1), `v0.5.0` funcionalidad completa (semana 2) y `v1.0.0` release final (semana 3).
+- Los tags son **anotados**, se crean sobre `main` con el pipeline en verde y se publican en Azure Repos y GitHub.
+- Las versiones `0.1.0` a `0.8.0` se etiquetaron el 2026-10-20 sobre los commits que cierran cada hito, porque el versionado formal (AB#356) se adoptó después del desarrollo. Ver la nota de transparencia del CHANGELOG.
+- `tests/versions.test.js` impide publicar versiones incoherentes: backend y frontend iguales, `CHANGELOG` ordenado y su entrada más reciente igual a la versión actual.
 
 ## Ambientes
 
