@@ -7,8 +7,9 @@ const formatFecha = (iso) =>
   new Date(iso).toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short' });
 
 // Historial (bitacora) de un incidente con formulario para agregar comentarios.
+// El autor del comentario es el usuario autenticado (lo decide el backend por el token).
 // refreshKey cambia cuando el incidente se modifica, para recargar los eventos automaticos.
-export default function IncidentHistory({ incidentId, actorId, refreshKey, cerrado = false }) {
+export default function IncidentHistory({ incidentId, refreshKey, cerrado = false }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,11 +31,10 @@ export default function IncidentHistory({ incidentId, actorId, refreshKey, cerra
     setSending(true);
     setError(null);
     try {
-      const created = await addComment(incidentId, texto.trim(), actorId);
+      await addComment(incidentId, texto.trim());
       // El evento creado no trae el nombre del autor; se recarga el historial completo
       setTexto('');
       setEvents(await fetchEvents(incidentId));
-      return created;
     } catch (err) {
       setError(err.message);
     } finally {
@@ -69,10 +69,9 @@ export default function IncidentHistory({ incidentId, actorId, refreshKey, cerra
             Comentario
             <textarea value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={2000} rows={3} />
           </label>
-          <button type="submit" disabled={sending || actorId == null || texto.trim() === ''}>
+          <button type="submit" disabled={sending || texto.trim() === ''}>
             Comentar
           </button>
-          {actorId == null && <span className="hint">Seleccione quién actúa para comentar.</span>}
         </form>
       )}
     </section>

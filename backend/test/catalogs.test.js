@@ -14,6 +14,17 @@ test('GET /api/users?rol=TECNICO devuelve solo tecnicos', async () => {
   assert.deepStrictEqual(res.body.map((u) => u.nombre), ['Carlos Teleco', 'Luis Tecnico', 'Marta Tecnica']);
 });
 
+test('los tecnicos incluyen las categorias que atienden y los demas roles no', async () => {
+  const { admin } = await crearEntorno();
+  const todos = (await admin.get('/api/users')).body;
+  const porNombre = Object.fromEntries(todos.map((u) => [u.nombre, u]));
+  assert.deepStrictEqual(porNombre['Luis Tecnico'].categorias, [1]);
+  assert.deepStrictEqual(porNombre['Marta Tecnica'].categorias, [2, 3]);
+  assert.deepStrictEqual(porNombre['Carlos Teleco'].categorias, [4]);
+  assert.strictEqual(porNombre['Ana Solicitante'].categorias, undefined);
+  assert.strictEqual(porNombre['Admin TI'].categorias, undefined);
+});
+
 test('GET /api/users sin filtro devuelve todos y rol invalido responde 400', async () => {
   const { admin } = await crearEntorno();
   assert.strictEqual((await admin.get('/api/users')).body.length, 6);

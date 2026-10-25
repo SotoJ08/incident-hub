@@ -4,10 +4,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import IncidentDetail from '../src/components/IncidentDetail.jsx';
 import IncidentList from '../src/components/IncidentList.jsx';
-import { WORKFLOW } from './fixtures.js';
+import { WORKFLOW, ADMIN, TECNICO, SOLICITANTE, TECNICOS, CATEGORIAS } from './fixtures.js';
 
-const technicians = [{ id: 2, nombre: 'Luis Tecnico' }, { id: 3, nombre: 'Marta Tecnica' }];
+// Incidente de la categoria 1 (Equipo de computo, que atiende Luis, id 2)
 const base = { id: 7, titulo: 'Laptop no enciende', descripcion: 'Sin energia', category_id: 1, prioridad: 'BAJA', estado: 'NUEVO', tecnico_id: null };
+const otroTecnico = { id: 3, nombre: 'Marta Tecnica', rol: 'TECNICO', categorias: [1] };
 
 // Las escrituras (PATCH) devuelven `response`; las lecturas del historial devuelven una lista vacia
 function mockPatch(response, ok = true) {
@@ -26,14 +27,16 @@ const lastCall = (fetchMock) => {
 
 const renderDetail = (incident = base, props = {}) => {
   const onUpdated = vi.fn();
-  render(<IncidentDetail incident={incident} technicians={technicians} workflow={WORKFLOW} actorId={4} onUpdated={onUpdated} onClose={() => {}} {...props} />);
+  render(
+    <IncidentDetail incident={incident} technicians={TECNICOS} workflow={WORKFLOW} user={ADMIN} onUpdated={onUpdated} onClose={() => {}} {...props} />
+  );
   return onUpdated;
 };
 
-describe('IncidentDetail', () => {
+describe('IncidentDetail como administrador', () => {
   beforeEach(() => vi.unstubAllGlobals());
 
-  it('asigna un tecnico enviando tecnico_id y autor_id', async () => {
+  it('asigna un tecnico enviando solo tecnico_id (el autor lo decide el backend)', async () => {
     const updated = { ...base, estado: 'ASIGNADO', tecnico_id: 2 };
     const fetchMock = mockPatch(updated);
     const onUpdated = renderDetail();
@@ -42,7 +45,21 @@ describe('IncidentDetail', () => {
     await userEvent.selectOptions(screen.getByLabelText('Técnico'), '2');
     await userEvent.click(boton);
     await waitFor(() => expect(onUpdated).toHaveBeenCalledWith(updated));
-    expect(lastCall(fetchMock)).toEqual({ url: '/api/incidents/7/assign', method: 'PATCH', body: { tecnico_id: 2, autor_id: 4 } });
+    expect(lastCall(fetchMock)).toEqual({ url: '/api/incidents/7/assign', method: 'PATCH', body: { tecnico_id: 2 } });
+  });
+
+  it('solo ofrece los tecnicos que atienden la categoria del incidente', () => {
+    renderDetail();
+    const opciones = screen.getAllByRole('option').map((o) => o.textContent);
+    expect(opciones).toContain('Luis Tecnico'); // atiende la categoria 1
+    expect(opciones).not.toContain('Marta Tecnica'); // atiende 2 y 3
+    expect(opciones).not.toContain('Carlos Teleco'); // atiende 4
+  });
+
+  it('avisa si ningun tecnico atiende la categoria', () => {
+    renderDetail({ ...base, category_id: 5 });
+    expect(screen.getByText('Ningún técnico atiende la categoría de este incidente.')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Técnico')).not.toBeInTheDocument();
   });
 
   it('sin tecnico no deja cambiar el estado y avisa', () => {
@@ -54,12 +71,12 @@ describe('IncidentDetail', () => {
   it('ofrece solo las transiciones permitidas y envia el estado elegido', async () => {
     const asignado = { ...base, estado: 'ASIGNADO', tecnico_id: 2 };
     const fetchMock = mockPatch({ ...asignado, estado: 'EN_PROCESO' });
-    const onUpdated = renderDetail(asignado);
+    const onUpdated = renderDetail(asignado, { technicians: [...TECNICOS, otroTecnico] });
     expect(screen.queryByRole('button', { name: 'CERRADO' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Reasignar' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'EN_PROCESO' }));
     await waitFor(() => expect(onUpdated).toHaveBeenCalled());
-    expect(lastCall(fetchMock)).toEqual({ url: '/api/incidents/7/status', method: 'PATCH', body: { estado: 'EN_PROCESO', autor_id: 4 } });
+    expect(lastCall(fetchMock)).toEqual({ url: '/api/incidents/7/status', method: 'PATCH', body: { estado: 'EN_PROCESO' } });
   });
 
   it('un incidente RESUELTO puede cerrarse o reabrirse pero ya no asignarse', () => {
@@ -89,18 +106,39 @@ describe('IncidentDetail', () => {
     expect(screen.queryByRole('button', { name: /Asignar|Reasignar|EN_PROCESO/ })).not.toBeInTheDocument();
   });
 
-  it('sin actor seleccionado deshabilita las acciones', () => {
-    renderDetail({ ...base, estado: 'ASIGNADO', tecnico_id: 2 }, { actorId: null });
-    expect(screen.getByText(/para poder operar el incidente/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'EN_PROCESO' })).toBeDisabled();
-  });
-
   it('muestra el error del servidor y no notifica actualizacion', async () => {
     mockPatch({ errors: ['transicion invalida: ASIGNADO -> CERRADO'] }, false);
     const onUpdated = renderDetail({ ...base, estado: 'ASIGNADO', tecnico_id: 2 });
     await userEvent.click(screen.getByRole('button', { name: 'EN_PROCESO' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('transicion invalida');
     expect(onUpdated).not.toHaveBeenCalled();
+  });
+});
+
+describe('IncidentDetail segun el rol', () => {
+  beforeEach(() => { vi.unstubAllGlobals(); mockPatch({}); });
+
+  const asignadoALuis = { ...base, estado: 'ASIGNADO', tecnico_id: 2 };
+
+  it('el tecnico asignado cambia el estado pero no puede asignar', () => {
+    renderDetail(asignadoALuis, { user: TECNICO });
+    expect(screen.getByRole('button', { name: 'EN_PROCESO' })).toBeEnabled();
+    expect(screen.queryByLabelText('Técnico')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Asignar|Reasignar/ })).not.toBeInTheDocument();
+  });
+
+  it('un tecnico que ve el incidente pero no lo tiene asignado no puede cambiar el estado', () => {
+    renderDetail({ ...asignadoALuis, tecnico_id: 3 }, { user: TECNICO });
+    expect(screen.queryByRole('button', { name: 'EN_PROCESO' })).not.toBeInTheDocument();
+    expect(screen.getByText('Solo un administrador o el técnico asignado puede cambiar el estado.')).toBeInTheDocument();
+  });
+
+  it('el solicitante solo ve el incidente y su historial: sin asignar ni cambiar estado', () => {
+    renderDetail(asignadoALuis, { user: SOLICITANTE });
+    expect(screen.queryByRole('button', { name: /Asignar|Reasignar|EN_PROCESO/ })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Técnico')).not.toBeInTheDocument();
+    expect(screen.getByText('Solo un administrador o el técnico asignado puede cambiar el estado.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Comentario')).toBeInTheDocument(); // si puede comentar
   });
 });
 
@@ -111,14 +149,14 @@ describe('IncidentList con detalle', () => {
     const inc = { ...base, estado: 'ASIGNADO', tecnico_id: 2 };
     const fetchMock = vi.fn(async (url, init) => {
       if (init?.method === 'PATCH') return { ok: true, json: async () => ({ ...inc, estado: 'EN_PROCESO' }) };
-      const body = url.startsWith('/api/categories') ? [{ id: 1, nombre: 'Equipo', parent_id: null }]
-        : url.startsWith('/api/users') ? technicians
+      const body = url.startsWith('/api/categories') ? CATEGORIAS
+        : url.startsWith('/api/users') ? TECNICOS
         : url.startsWith('/api/workflow') ? WORKFLOW
         : url.includes('/events') ? [] : [inc];
       return { ok: true, json: async () => body };
     });
     vi.stubGlobal('fetch', fetchMock);
-    render(<IncidentList actorId={4} />);
+    render(<IncidentList user={ADMIN} />);
     await userEvent.click(await screen.findByRole('button', { name: 'Ver incidente 7' }));
     expect(screen.getByRole('complementary', { name: 'Incidente 7' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'EN_PROCESO' }));

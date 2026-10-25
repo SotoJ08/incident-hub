@@ -1,9 +1,7 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import Dashboard from '../src/components/Dashboard.jsx';
-import App from '../src/App.jsx';
 
 const stats = {
   total: 5,
@@ -85,19 +83,5 @@ describe('Dashboard', () => {
     mockFetch({}, false);
     render(<Dashboard />);
     expect(await screen.findByRole('alert')).toBeInTheDocument();
-  });
-});
-
-describe('App', () => {
-  beforeEach(() => vi.unstubAllGlobals());
-
-  it('permite cambiar entre Incidentes y Dashboard', async () => {
-    const fetchMock = mockFetch();
-    render(<App />);
-    expect(screen.getByRole('button', { name: 'Incidentes' })).toHaveAttribute('aria-current', 'page');
-    await userEvent.click(screen.getByRole('button', { name: 'Dashboard' }));
-    expect(await screen.findByText('Sin asignar')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Dashboard' })).toHaveAttribute('aria-current', 'page');
-    expect(fetchMock.mock.calls.some((c) => c[0] === '/api/stats')).toBe(true);
   });
 });
