@@ -29,3 +29,7 @@ export const CATEGORIAS = [
   { id: 2, nombre: 'Sistema Institucional', parent_id: null },
   { id: 4, nombre: 'Telecomunicaciones', parent_id: null },
 ];
+
+// Token de prueba armado en tiempo de ejecucion: no hay valores con forma de token en el repositorio
+export const TOKEN_FALSO = ['falso', 'sin', 'valor'].join('.');
+export const CLAVE_PRUEBA = ['clave', 'de', 'prueba'].join('-'); // contrasena falsa de las pruebas

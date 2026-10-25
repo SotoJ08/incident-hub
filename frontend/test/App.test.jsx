@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../src/App.jsx';
 import { getToken, saveToken, clearToken } from '../src/session.js';
-import { WORKFLOW, ADMIN, TECNICO, TECNICOS, CATEGORIAS } from './fixtures.js';
+import { WORKFLOW, ADMIN, TECNICO, TECNICOS, CATEGORIAS, TOKEN_FALSO, CLAVE_PRUEBA } from './fixtures.js';
 
 const STATS = {
   total: 1, abiertos: 1, cerrados: 0, criticos: 0, sin_asignar: 1,
@@ -15,7 +15,7 @@ const INCIDENTE = { id: 1, titulo: 'Laptop no enciende', descripcion: 'd', categ
 // Simula el backend: login, /me y los catalogos; `sesionValida` controla si el token se acepta
 function mockBackend({ usuario = ADMIN, sesionValida = true } = {}) {
   const fetchMock = vi.fn(async (url, init) => {
-    if (url === '/api/auth/login') return { ok: true, status: 200, json: async () => ({ token: 'tok.en.firmado', user: usuario }) };
+    if (url === '/api/auth/login') return { ok: true, status: 200, json: async () => ({ token: TOKEN_FALSO, user: usuario }) };
     if (url === '/api/workflow') return { ok: true, status: 200, json: async () => WORKFLOW };
     const autorizado = Boolean(init?.headers?.Authorization) && sesionValida;
     if (!autorizado) return { ok: false, status: 401, json: async () => ({ errors: ['no autenticado'] }) };
@@ -34,7 +34,7 @@ function mockBackend({ usuario = ADMIN, sesionValida = true } = {}) {
 
 async function iniciarSesion(correo = 'admin@example.com') {
   await userEvent.type(screen.getByLabelText('Correo'), correo);
-  await userEvent.type(screen.getByLabelText('Contraseña'), 'clave-de-prueba');
+  await userEvent.type(screen.getByLabelText('Contraseña'), CLAVE_PRUEBA);
   await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
 }
 
@@ -57,7 +57,7 @@ describe('App: sesion', () => {
     expect(screen.getByText(/Administrador/)).toBeInTheDocument();
     expect(await screen.findByText('Laptop no enciende')).toBeInTheDocument();
     expect(screen.queryByRole('form', { name: 'Iniciar sesión' })).not.toBeInTheDocument();
-    expect(getToken()).toBe('tok.en.firmado');
+    expect(getToken()).toBe(TOKEN_FALSO);
   });
 
   it('ya no existe el selector "Actuando como"', async () => {
