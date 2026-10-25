@@ -5,7 +5,7 @@ El objetivo principal es demostrar un flujo verificable:
 
 **Azure Boards -> rama -> commit (`AB#ID`) -> Pull Request -> CI -> artefacto -> versión -> release por ambientes**
 
-Versión actual: ver [CHANGELOG.md](CHANGELOG.md) (candidata a `v1.0.0`).
+Versión actual: **1.0.0** (primera versión estable). Historial de versiones en [CHANGELOG.md](CHANGELOG.md).
 
 ## Qué hace
 | Área | Funcionalidad |
@@ -120,15 +120,16 @@ Detalle en [docs/architecture.md](docs/architecture.md).
 - GitHub: https://github.com/SotoJ08/incident-hub
 - Azure DevOps: https://dev.azure.com/jsoto1/incident-hub (Boards, Repos, Pipelines, Environments)
 
-## Equipo (proyecto individual con roles simulados)
-| Rol | Responsable | Autor de commit |
-|---|---|---|
-| Backend | Jesus Soto (SotoJ08) | `Jesus Soto (Backend)` |
-| Frontend | Jesus Soto (SotoJ08) | `Jesus Soto (Frontend)` |
-| DevOps | Jesus Soto (SotoJ08) | `Jesus Soto (DevOps)` |
-| QA / Seguridad | Jesus Soto (SotoJ08) | `Jesus Soto (QA)` |
+## Equipo (proyecto individual con 3 integrantes simulados)
+Es un proyecto individual. El trabajo se reparte entre **tres integrantes simulados**, cada uno con su **propia cuenta de GitHub y su propio correo**, de modo que sus contribuciones se pueden verificar en el historial de commits y en el gráfico de contribuidores del repositorio (regla 9 del enunciado).
 
-Es un proyecto individual: los roles se distinguen por el nombre del autor en cada commit, todos bajo la misma cuenta y correo verificados.
+| Integrante | Cuenta de GitHub | Rol | Responsabilidades |
+|---|---|---|---|
+| 1 | [SotoJ08](https://github.com/SotoJ08) | Backend y DevOps | API, base de datos, pipelines, ambientes, versionado y release |
+| 2 | [DharaGar29](https://github.com/DharaGar29) | Frontend | Interfaz React, accesibilidad y pruebas de interfaz |
+| 3 | [Edd210](https://github.com/Edd210) | QA y Seguridad | Pruebas, escáner de secretos, dependencias, deuda técnica y documentación |
+
+**Transparencia sobre el historial.** Entre el 17 y el 20 de octubre de 2026 (hasta la versión 0.9.1) todos los commits se hicieron desde una sola cuenta, con el rol escrito en el nombre del autor: `Jesus Soto (Backend)` y `Jesus Soto (DevOps)` corresponden al integrante 1, `Jesus Soto (Frontend)` al integrante 2 y `Jesus Soto (QA)` al integrante 3. Las cuentas de los integrantes 2 y 3 se crearon el 24 de octubre de 2026; **desde esa fecha el trabajo nuevo se firma con la cuenta de cada integrante**. El historial anterior no se reescribió.
 
 ## Limitaciones conocidas
 - **Sin autenticación:** el selector "Actuando como" es provisional (deuda D5).

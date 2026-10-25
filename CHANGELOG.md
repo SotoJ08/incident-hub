@@ -8,7 +8,17 @@ Cada entrada indica los Work Items (`AB#ID`) y Pull Requests que la componen. Lo
 > (la fecha del tag es la de su creación; la fecha de cada commit es la real).
 
 ## [Sin publicar]
-- Pendiente para 1.0.0: README completo, documentación de arquitectura, validación final y aprobación a producción.
+- Mejora planificada para 1.1.0: inicio de sesión con roles (solicitante, técnico, administrador) y asignación automática por categoría (deuda D5).
+
+## [1.0.0] - 2026-10-24
+Primera versión estable: cierra el alcance funcional y de proceso del proyecto integrador.
+### Añadido
+- README completo (requisitos, instalación, ejecución, API, proceso DevOps y equipo) y documentación de arquitectura (AB#370, PR #21).
+- Equipo de 3 integrantes simulados con cuentas de GitHub y correos propios, con transparencia sobre el historial anterior (AB#372).
+### Estado del proyecto en esta versión
+- Todas las áreas funcionales del enunciado de punta a punta: incidentes, operación, bitácora, filtros, dashboard y API con PostgreSQL.
+- Proceso DevOps: Azure Boards, ramas y PR con `AB#ID`, CI en Azure Pipelines con agente autohospedado y en GitHub Actions, fallo controlado del pipeline (run #6 y #34 fallidas y corregidas), secretos protegidos, análisis de dependencias, deuda técnica (2 de 9 resueltas), SemVer y despliegue por ambientes con aprobaciones y rollback.
+- Limitaciones conocidas: sin autenticación (D5), pruebas con pg-mem (D4) y despliegue por ambientes local; ver `docs/technical-debt.md`.
 
 ## [0.9.1] - 2026-10-20
 ### Corregido
@@ -73,5 +83,5 @@ Cada entrada indica los Work Items (`AB#ID`) y Pull Requests que la componen. Lo
 | v0.7.0 | `b924d7b` | Secretos |
 | v0.8.0 | `fd0bb21` | Ambientes y aprobaciones |
 | v0.9.0 | `e52604c` | Versionado y candidata a 1.0.0 |
-| v0.9.1 | commit de este PR | Corrección del despliegue con ZIP de builds anteriores |
-| v1.0.0 | pendiente | Release final |
+| v0.9.1 | `f15b010` | Corrección del despliegue con ZIP de builds anteriores |
+| v1.0.0 | commit de este PR | Primera versión estable |
