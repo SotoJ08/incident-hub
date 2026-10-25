@@ -1,6 +1,6 @@
 {
   "name": "incident-hub-backend",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "private": true,
   "description": "API REST de IT Incident Hub",
   "main": "src/server.js",
