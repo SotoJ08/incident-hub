@@ -1,34 +1,24 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const fs = require('fs');
-const path = require('path');
-const request = require('supertest');
-const { newDb } = require('pg-mem');
-const { migrate } = require('../src/migrate');
-const { createApp } = require('../src/app');
+const { USUARIOS, crearEntorno, insertarIncidente } = require('./helpers');
 
-async function setup(withIncidents = true) {
-  const { Client } = newDb().adapters.createPg();
-  const db = new Client();
-  await db.connect();
-  await migrate(db);
-  await db.query(fs.readFileSync(path.join(__dirname, '..', '..', 'database', 'seed.sql'), 'utf8'));
-  if (withIncidents) {
-    // categorias: 1=Equipo, 2=Sistema; tecnicos: 2=Luis, 3=Marta
-    await db.query(`INSERT INTO incidents (titulo, descripcion, category_id, prioridad, estado, solicitante_id, tecnico_id) VALUES
-      ('a', 'd', 1, 'BAJA',    'NUEVO',      1, NULL),
-      ('b', 'd', 1, 'CRITICA', 'ASIGNADO',   1, 2),
-      ('c', 'd', 2, 'CRITICA', 'CERRADO',    1, 2),
-      ('d', 'd', 2, 'ALTA',    'EN_PROCESO', 1, 3),
-      ('e', 'd', 2, 'CRITICA', 'EN_PROCESO', 1, 3)`);
+// categorias: 1=Equipo, 2=Sistema, 3=Accesos, 4=Telecomunicaciones, 5=Otros; tecnicos: 2=Luis, 3=Marta, 5=Carlos
+async function setup(conIncidentes = true) {
+  const env = await crearEntorno();
+  if (conIncidentes) {
+    await insertarIncidente(env.db, { titulo: 'a', category_id: 1, prioridad: 'BAJA', estado: 'NUEVO', tecnico_id: null, solicitante_id: USUARIOS.ANA });
+    await insertarIncidente(env.db, { titulo: 'b', category_id: 1, prioridad: 'CRITICA', estado: 'ASIGNADO', tecnico_id: 2, solicitante_id: USUARIOS.ANA });
+    await insertarIncidente(env.db, { titulo: 'c', category_id: 2, prioridad: 'CRITICA', estado: 'CERRADO', tecnico_id: 2, solicitante_id: USUARIOS.PEDRO });
+    await insertarIncidente(env.db, { titulo: 'd', category_id: 2, prioridad: 'ALTA', estado: 'EN_PROCESO', tecnico_id: 3, solicitante_id: USUARIOS.PEDRO });
+    await insertarIncidente(env.db, { titulo: 'e', category_id: 2, prioridad: 'CRITICA', estado: 'EN_PROCESO', tecnico_id: 3, solicitante_id: USUARIOS.ANA });
   }
-  return request(createApp(db));
+  return env;
 }
 
 const find = (list, key, value) => list.find((x) => x[key] === value);
 
-test('cuenta abiertos, cerrados, criticos y sin asignar', async () => {
-  const res = await (await setup()).get('/api/stats');
+test('cuenta abiertos, cerrados, criticos y sin asignar (administrador)', async () => {
+  const res = await (await setup()).admin.get('/api/stats');
   assert.strictEqual(res.status, 200);
   assert.strictEqual(res.body.total, 5);
   assert.strictEqual(res.body.abiertos, 4);
@@ -38,13 +28,12 @@ test('cuenta abiertos, cerrados, criticos y sin asignar', async () => {
 });
 
 test('distribucion por estado incluye todos los estados, incluso con cero', async () => {
-  const res = await (await setup()).get('/api/stats');
+  const res = await (await setup()).admin.get('/api/stats');
   assert.deepStrictEqual(res.body.por_estado, { NUEVO: 1, ASIGNADO: 1, EN_PROCESO: 2, RESUELTO: 0, CERRADO: 1 });
 });
 
 test('distribucion por categoria incluye categorias sin incidentes', async () => {
-  const res = await (await setup()).get('/api/stats');
-  const cats = res.body.por_categoria;
+  const cats = (await (await setup()).admin.get('/api/stats')).body.por_categoria;
   assert.strictEqual(cats.length, 5);
   assert.strictEqual(find(cats, 'nombre', 'Equipo de computo').total, 2);
   assert.strictEqual(find(cats, 'nombre', 'Sistema Institucional').total, 3);
@@ -52,13 +41,12 @@ test('distribucion por categoria incluye categorias sin incidentes', async () =>
 });
 
 test('distribucion por tecnico lista solo tecnicos', async () => {
-  const res = await (await setup()).get('/api/stats');
-  const tecs = res.body.por_tecnico;
+  const tecs = (await (await setup()).admin.get('/api/stats')).body.por_tecnico;
   assert.deepStrictEqual(tecs.map((t) => [t.nombre, t.total]), [['Carlos Teleco', 0], ['Luis Tecnico', 2], ['Marta Tecnica', 2]]);
 });
 
 test('sin incidentes todo vale cero', async () => {
-  const res = await (await setup(false)).get('/api/stats');
+  const res = await (await setup(false)).admin.get('/api/stats');
   assert.strictEqual(res.body.total, 0);
   assert.strictEqual(res.body.abiertos, 0);
   assert.strictEqual(res.body.criticos, 0);
@@ -66,7 +54,29 @@ test('sin incidentes todo vale cero', async () => {
 });
 
 test('los totales son numeros, no cadenas', async () => {
-  const res = await (await setup()).get('/api/stats');
+  const res = await (await setup()).admin.get('/api/stats');
   assert.strictEqual(typeof res.body.por_categoria[0].total, 'number');
   assert.strictEqual(typeof res.body.por_estado.NUEVO, 'number');
+});
+
+test('el solicitante solo cuenta sus propios incidentes', async () => {
+  const res = await (await setup()).as(USUARIOS.PEDRO).get('/api/stats');
+  assert.strictEqual(res.body.total, 2); // c y d
+  assert.strictEqual(res.body.cerrados, 1);
+  assert.strictEqual(res.body.criticos, 0); // su unico critico (c) esta cerrado
+  assert.strictEqual(res.body.por_estado.CERRADO, 1);
+});
+
+test('el tecnico solo cuenta los incidentes de las categorias que atiende y solo ve esas categorias', async () => {
+  const res = await (await setup()).as(USUARIOS.MARTA).get('/api/stats'); // Marta: categorias 2 y 3
+  assert.strictEqual(res.body.total, 3); // c, d, e
+  assert.strictEqual(res.body.criticos, 1); // e
+  assert.deepStrictEqual(res.body.por_categoria.map((c) => c.nombre).sort(), ['Gestion de Accesos', 'Sistema Institucional']);
+});
+
+test('un tecnico sin categorias no ve nada', async () => {
+  const env = await setup();
+  await env.db.query('DELETE FROM tecnico_categorias WHERE user_id = 5');
+  const res = await env.as(USUARIOS.CARLOS).get('/api/stats');
+  assert.strictEqual(res.body.total, 0);
 });
