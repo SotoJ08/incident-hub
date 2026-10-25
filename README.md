@@ -5,7 +5,7 @@ El objetivo principal es demostrar un flujo verificable:
 
 **Azure Boards -> rama -> commit (`AB#ID`) -> Pull Request -> CI -> artefacto -> versión -> release por ambientes**
 
-Versión actual: ver [CHANGELOG.md](CHANGELOG.md) (candidata a `v1.0.0`).
+Versión actual: **1.0.0** (primera versión estable). Historial de versiones en [CHANGELOG.md](CHANGELOG.md).
 
 ## Qué hace
 | Área | Funcionalidad |
