@@ -4,8 +4,9 @@ import { PRIORIDADES } from '../constants.js';
 
 const INICIAL = { titulo: '', descripcion: '', category_id: '', prioridad: 'BAJA' };
 
-// Formulario de alta de incidentes. El solicitante es quien actua (actorId) hasta tener autenticacion.
-export default function IncidentForm({ categories, actorId, onCreated }) {
+// Formulario de alta de incidentes. El solicitante es la persona autenticada (lo decide el backend)
+// y, si la categoria tiene tecnico, el incidente se asigna solo.
+export default function IncidentForm({ categories, onCreated }) {
   const [values, setValues] = useState(INICIAL);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +24,6 @@ export default function IncidentForm({ categories, actorId, onCreated }) {
         descripcion: values.descripcion.trim(),
         category_id: Number(values.category_id),
         prioridad: values.prioridad,
-        solicitante_id: actorId,
       });
       setValues(INICIAL);
       onCreated(created);
@@ -37,7 +37,7 @@ export default function IncidentForm({ categories, actorId, onCreated }) {
   return (
     <form className="incident-form" onSubmit={submit} aria-label="Nuevo incidente">
       <h2>Nuevo incidente</h2>
-      {actorId == null && <p className="hint">Seleccione quién actúa: será el solicitante del incidente.</p>}
+      <p className="hint">Se asignará automáticamente al técnico que atiende la categoría elegida.</p>
       {error && <p role="alert" className="error">{error}</p>}
       <label>
         Título
@@ -66,7 +66,7 @@ export default function IncidentForm({ categories, actorId, onCreated }) {
           </select>
         </label>
       </div>
-      <button type="submit" disabled={busy || actorId == null || !completo}>Crear incidente</button>
+      <button type="submit" disabled={busy || !completo}>Crear incidente</button>
     </form>
   );
 }

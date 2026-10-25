@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { fetchIncidents, fetchCategories, fetchTechnicians, fetchWorkflow } from '../api.js';
+import { alcance } from '../permissions.js';
 import Filters from './Filters.jsx';
 import IncidentDetail from './IncidentDetail.jsx';
 import IncidentForm from './IncidentForm.jsx';
 
 const EMPTY = { estado: '', prioridad: '', category_id: '', tecnico_id: '' };
 
-export default function IncidentList({ actorId = null }) {
+// Lista de incidentes: el backend ya limita lo que cada rol puede ver; aqui solo se muestra
+export default function IncidentList({ user }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -42,16 +44,21 @@ export default function IncidentList({ actorId = null }) {
 
   return (
     <section>
+      <p className="scope">{alcance(user)}</p>
       <div className="list-actions">
         <button type="button" aria-expanded={showForm} onClick={() => setShowForm((v) => !v)}>
           {showForm ? 'Cancelar' : 'Nuevo incidente'}
         </button>
-        {created && <p role="status" className="success">Incidente #{created.id} creado.</p>}
+        {created && (
+          <p role="status" className="success">
+            Incidente #{created.id} creado
+            {created.tecnico_id != null ? ` y asignado automáticamente a ${techName(created.tecnico_id)}.` : '; queda pendiente de asignar.'}
+          </p>
+        )}
       </div>
       {showForm && (
         <IncidentForm
           categories={categories}
-          actorId={actorId}
           onCreated={(incident) => {
             setCreated(incident);
             setShowForm(false);
@@ -69,7 +76,7 @@ export default function IncidentList({ actorId = null }) {
       {loading ? (
         <p>Cargando…</p>
       ) : incidents.length === 0 ? (
-        <p>No hay incidentes con esos filtros.</p>
+        <p>No hay incidentes para mostrar.</p>
       ) : (
         <table>
           <thead>
@@ -97,7 +104,7 @@ export default function IncidentList({ actorId = null }) {
           incident={selected}
           technicians={technicians}
           workflow={workflow}
-          actorId={actorId}
+          user={user}
           onUpdated={replaceIncident}
           onClose={() => setSelectedId(null)}
         />
