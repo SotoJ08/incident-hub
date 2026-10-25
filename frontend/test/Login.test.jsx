@@ -4,9 +4,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Login from '../src/components/Login.jsx';
 import { getToken, clearToken } from '../src/session.js';
-import { ADMIN } from './fixtures.js';
+import { ADMIN, TOKEN_FALSO, CLAVE_PRUEBA } from './fixtures.js';
 
-function mockLogin({ ok = true, body = { token: 'tok.en.firmado', user: ADMIN } } = {}) {
+function mockLogin({ ok = true, body = { token: TOKEN_FALSO, user: ADMIN } } = {}) {
   const fetchMock = vi.fn(async () => ({ ok, status: ok ? 200 : 401, json: async () => body }));
   vi.stubGlobal('fetch', fetchMock);
   return fetchMock;
@@ -42,11 +42,11 @@ describe('Login', () => {
     const fetchMock = mockLogin();
     const onLogin = vi.fn();
     render(<Login onLogin={onLogin} />);
-    await escribir('  admin@example.com  ', 'clave-de-prueba');
+    await escribir('  admin@example.com  ', CLAVE_PRUEBA);
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
     await waitFor(() => expect(onLogin).toHaveBeenCalledWith(ADMIN));
-    expect(getToken()).toBe('tok.en.firmado');
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'admin@example.com', password: 'clave-de-prueba' });
+    expect(getToken()).toBe(TOKEN_FALSO);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'admin@example.com', password: CLAVE_PRUEBA });
   });
 
   it('con credenciales invalidas muestra el error, limpia la contrasena y no guarda sesion', async () => {
