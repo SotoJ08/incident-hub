@@ -45,7 +45,7 @@ test('distribucion por estado incluye todos los estados, incluso con cero', asyn
 test('distribucion por categoria incluye categorias sin incidentes', async () => {
   const res = await (await setup()).get('/api/stats');
   const cats = res.body.por_categoria;
-  assert.strictEqual(cats.length, 4);
+  assert.strictEqual(cats.length, 5);
   assert.strictEqual(find(cats, 'nombre', 'Equipo de computo').total, 2);
   assert.strictEqual(find(cats, 'nombre', 'Sistema Institucional').total, 3);
   assert.strictEqual(find(cats, 'nombre', 'Telecomunicaciones').total, 0);
@@ -54,7 +54,7 @@ test('distribucion por categoria incluye categorias sin incidentes', async () =>
 test('distribucion por tecnico lista solo tecnicos', async () => {
   const res = await (await setup()).get('/api/stats');
   const tecs = res.body.por_tecnico;
-  assert.deepStrictEqual(tecs.map((t) => [t.nombre, t.total]), [['Luis Tecnico', 2], ['Marta Tecnica', 2]]);
+  assert.deepStrictEqual(tecs.map((t) => [t.nombre, t.total]), [['Carlos Teleco', 0], ['Luis Tecnico', 2], ['Marta Tecnica', 2]]);
 });
 
 test('sin incidentes todo vale cero', async () => {
