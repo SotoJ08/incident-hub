@@ -1,17 +1,19 @@
 const express = require('express');
+const { canSee } = require('../access');
 
 const TIPOS = ['COMENTARIO', 'CAMBIO_ESTADO', 'ASIGNACION'];
 const MAX_COMENTARIO = 2000;
 
 // Historial (bitacora) de un incidente: comentarios manuales y eventos automaticos
-// generados al asignar o cambiar de estado.
+// generados al asignar o cambiar de estado. Solo lo ve quien puede ver el incidente;
+// el autor de un comentario es siempre el usuario autenticado.
 function incidentHistoryRouter(db) {
   const router = express.Router();
 
   async function findIncident(req, res) {
     if (!/^\d+$/.test(req.params.id)) { res.status(400).json({ errors: ['id invalido'] }); return null; }
-    const { rows } = await db.query('SELECT id, estado FROM incidents WHERE id = $1', [Number(req.params.id)]);
-    if (!rows.length) { res.status(404).json({ errors: ['incidente no encontrado'] }); return null; }
+    const { rows } = await db.query('SELECT id, estado, category_id, solicitante_id FROM incidents WHERE id = $1', [Number(req.params.id)]);
+    if (!rows.length || !canSee(req.user, rows[0])) { res.status(404).json({ errors: ['incidente no encontrado'] }); return null; }
     return rows[0];
   }
 
@@ -39,20 +41,19 @@ function incidentHistoryRouter(db) {
     try {
       const incident = await findIncident(req, res);
       if (!incident) return;
-      const { autor_id, comentario } = req.body || {};
-      const errors = [];
-      if (!Number.isInteger(autor_id)) errors.push('autor_id debe ser un entero');
-      if (typeof comentario !== 'string' || comentario.trim().length === 0) errors.push('comentario es obligatorio');
-      else if (comentario.trim().length > MAX_COMENTARIO) errors.push(`comentario admite maximo ${MAX_COMENTARIO} caracteres`);
-      if (errors.length) return res.status(400).json({ errors });
-      const autor = await db.query('SELECT id FROM users WHERE id = $1', [autor_id]);
-      if (!autor.rows.length) return res.status(400).json({ errors: ['autor_id no existe'] });
+      const { comentario } = req.body || {};
+      if (typeof comentario !== 'string' || comentario.trim().length === 0) {
+        return res.status(400).json({ errors: ['comentario es obligatorio'] });
+      }
+      if (comentario.trim().length > MAX_COMENTARIO) {
+        return res.status(400).json({ errors: [`comentario admite maximo ${MAX_COMENTARIO} caracteres`] });
+      }
       if (incident.estado === 'CERRADO') {
         return res.status(409).json({ errors: ['no se puede comentar un incidente CERRADO'] });
       }
       const { rows } = await db.query(
         "INSERT INTO incident_events (incident_id, autor_id, tipo, detalle) VALUES ($1, $2, 'COMENTARIO', $3) RETURNING *",
-        [incident.id, autor_id, comentario.trim()]
+        [incident.id, req.user.id, comentario.trim()]
       );
       res.status(201).json(rows[0]);
     } catch (e) { next(e); }

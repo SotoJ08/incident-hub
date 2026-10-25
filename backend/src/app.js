@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const express = require('express');
 const { authRouter } = require('./routes/auth');
+const { requireAuth } = require('./middleware/auth');
 const { incidentsRouter } = require('./routes/incidents');
 const { incidentActionsRouter } = require('./routes/incident-actions');
 const { incidentHistoryRouter } = require('./routes/incident-history');
@@ -20,12 +21,15 @@ function createApp(db, options = {}) {
   const secret = resolveSecret(options);
   app.use(express.json());
   app.get('/health', (req, res) => res.json({ status: 'ok' }));
+  // Publico: login (y /me, que valida el token por su cuenta) y las reglas del flujo, que no son sensibles
   app.use('/api/auth', authRouter(db, secret));
+  app.use('/api/workflow', workflowRouter());
+  // Todo lo demas exige sesion iniciada
+  app.use('/api', requireAuth(db, secret));
   app.use('/api/incidents', incidentsRouter(db));
   app.use('/api/incidents', incidentActionsRouter(db));
   app.use('/api/incidents', incidentHistoryRouter(db));
   app.use('/api/stats', statsRouter(db));
-  app.use('/api/workflow', workflowRouter());
   app.use('/api', catalogsRouter(db));
   app.use((req, res) => res.status(404).json({ errors: ['ruta no encontrada'] }));
   // eslint-disable-next-line no-unused-vars
