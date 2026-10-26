@@ -1,0 +1,47 @@
+commit|autor|correo|fecha_local|mensaje
+09504e4|SotoJ08|jsoto1@miumg.edu.gt|2026-10-17 15:10|chore: estructura inicial del repositorio, README y docs base
+b40a2c3|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 21:17|feat: modelo de datos y migracion inicial AB#342 (#1)
+0b253b7|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 21:19|feat: endpoints POST/GET de incidentes AB#343 (#2)
+06090c6|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 21:21|feat: filtros del listado de incidentes AB#344 (#3)
+15380b9|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 21:24|ci: pipeline de Azure Pipelines AB#352 (#4)
+dcf8649|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 21:24|ci: workflow de GitHub Actions AB#353 (#5)
+27fbdd0|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 22:10|fix: orden del listado de incidentes AB#358 (#6)
+c5b20b6|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:04|feat: frontend React con lista de incidentes y filtros AB#345 (#7)
+1d369db|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:16|feat: asignacion de tecnico y transiciones de estado AB#346 (#8)
+02efbba|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:24|feat: comentarios y bitacora por incidente AB#348 (#9)
+eb0308c|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:27|feat: endpoint de indicadores /api/stats AB#350 (#10)
+9ef0a02|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:30|feat: dashboard de indicadores en React AB#351 (#11)
+b8df549|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:35|feat: UI de asignacion y cambio de estado AB#347 (#12)
+415d7db|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-17 23:36|feat: historial del incidente con comentarios AB#349 (#13)
+418b2b1|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 00:06|feat: formulario React para crear incidentes AB#359 (#14)
+678fd8c|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 00:26|refactor(ci): migrar NodeTool@0 a UseNode@1 AB#361 (#15)
+e1a092c|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 00:26|refactor: reglas del flujo con una sola fuente de verdad AB#362 (#16)
+be33033|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 00:27|docs: deuda tecnica real registrada y resuelta AB#360 (#17)
+b924d7b|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 19:04|feat: secretos en variable group protegido y GitHub Secrets AB#355 (#18)
+fd0bb21|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-18 19:05|feat: ambientes dev, staging y prod con aprobaciones AB#357 (#19)
+e52604c|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-20 21:48|build: versionado SemVer, CHANGELOG y version 0.9.0 AB#356 (#20)
+f15b010|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-20 21:54|fix(devops): desplegar el zip exacto de la build AB#371 (#22)
+8879d89|2311686 - JESUS EDUARDO SOTO|jsoto1@miumg.edu.gt|2026-10-25 05:44|docs: README completo y documentacion de arquitectura AB#370 (#21)
+99cebea|Edd210|chuzgamer08@gmail.com|2026-10-24 23:51|fix(deps): actualizar body-parser a 1.20.9 por GHSA-27r3-jxmh-p828 AB#374
+24552db|Edd210|chuzgamer08@gmail.com|2026-10-24 23:51|docs: registrar el hallazgo y la decision sobre body-parser en dependencias AB#374
+7fa3614|Edd210|chuzgamer08@gmail.com|2026-10-24 23:46|docs: equipo de 3 integrantes con cuentas distintas y transparencia del historial AB#372
+ea7b6a4|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-24 23:48|build: version 1.0.0 en backend y frontend AB#373
+c28435d|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-24 23:48|docs: CHANGELOG 1.0.0 y version actual en el README AB#373
+8ece887|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-24 23:56|feat(db): migracion 002 de credenciales y tecnico_categorias, seed con 6 usuarios AB#379
+d5f1667|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-24 23:56|feat(api): login con scrypt y token HS256, middleware requireAuth y /api/auth/me AB#380
+4bed703|Edd210|chuzgamer08@gmail.com|2026-10-24 23:56|test(api): pruebas de hash, token, login y /me; ajustar pruebas al nuevo seed AB#382
+b6b3cec|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-25 00:00|feat(api): permisos por rol, visibilidad por categoria y todas las rutas exigen sesion AB#383
+6b66a39|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-25 00:00|feat(api): asignacion automatica al tecnico de la categoria con menor carga AB#386
+450c4ae|Edd210|chuzgamer08@gmail.com|2026-10-25 00:00|test(api): matriz de permisos por rol, visibilidad, asignacion automatica y estadisticas por rol AB#385 AB#388
+d6018ae|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-25 00:03|feat(api): GET /api/users incluye las categorias que atiende cada tecnico AB#384
+bad919f|Edd210|chuzgamer08@gmail.com|2026-10-25 00:03|test(api): categorias de los tecnicos en el catalogo de usuarios AB#385
+1b9d469|DharaGar29|sotojesuseduardo8@gmail.com|2026-10-25 00:06|feat(frontend): inicio de sesion, sesion con token y cierre por expiracion AB#381
+26308fb|DharaGar29|sotojesuseduardo8@gmail.com|2026-10-25 00:06|feat(frontend): interfaz adaptada al rol y asignacion automatica visible AB#384 AB#387
+967f7d9|DharaGar29|sotojesuseduardo8@gmail.com|2026-10-25 00:06|build(frontend): incluir pruebas .test.js en Vitest AB#381
+1cd01d8|Edd210|chuzgamer08@gmail.com|2026-10-25 00:06|test(frontend): login, sesion, expiracion, permisos por rol y API sin autor ni solicitante AB#382 AB#385
+40416cf|Edd210|chuzgamer08@gmail.com|2026-10-25 00:09|docs: autenticacion y autorizacion en seguridad; D5 resuelta y nuevas deudas D10 y D11 AB#382 AB#389
+d384ead|Edd210|chuzgamer08@gmail.com|2026-10-25 00:11|test(frontend): construir token y contrasena falsos en ejecucion para no disparar el escaner de secretos AB#385
+270f94b|Edd210|chuzgamer08@gmail.com|2026-10-25 00:11|test(frontend): construir token y contrasena falsos en ejecucion para no disparar el escaner de secretos AB#385
+a83dd8d|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-25 00:12|build: version 1.1.0 en backend y frontend AB#389
+c2dbd13|Jesus Soto|jsoto1@miumg.edu.gt|2026-10-25 00:12|docs: CHANGELOG 1.1.0 con login, roles y asignacion automatica AB#389
+13530ff|Edd210|chuzgamer08@gmail.com|2026-10-25 00:12|docs: README con usuarios de demostracion y arquitectura con autenticacion y roles AB#382 AB#389

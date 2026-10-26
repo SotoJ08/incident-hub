@@ -1,0 +1,13 @@
+v0.1.0|2026-10-20|Jesus Soto (DevOps)|v0.1.0 - Base y primeros modulos: modelo de datos, API de incidentes y filtros (AB#342, AB#343, AB#344)
+v0.2.0|2026-10-20|Jesus Soto (DevOps)|v0.2.0 - CI en Azure Pipelines y GitHub Actions (AB#352, AB#353)
+v0.2.1|2026-10-20|Jesus Soto (DevOps)|v0.2.1 - Correccion del orden del listado, fallo controlado del pipeline (AB#358)
+v0.3.0|2026-10-20|Jesus Soto (DevOps)|v0.3.0 - Frontend React: lista de incidentes y filtros (AB#345)
+v0.4.0|2026-10-20|Jesus Soto (DevOps)|v0.4.0 - Operacion: asignacion, transiciones de estado y bitacora (AB#346, AB#348)
+v0.5.0|2026-10-20|Jesus Soto (DevOps)|v0.5.0 - Funcionalidad completa: dashboard, operacion, historial y alta (AB#347, AB#349, AB#350, AB#351, AB#359)
+v0.6.0|2026-10-20|Jesus Soto (DevOps)|v0.6.0 - Deuda tecnica D1 y D2 resueltas (AB#360, AB#361, AB#362)
+v0.7.0|2026-10-20|Jesus Soto (DevOps)|v0.7.0 - Secretos protegidos y escaner (AB#355)
+v0.8.0|2026-10-20|Jesus Soto (DevOps)|v0.8.0 - Ambientes dev, staging y prod con aprobaciones (AB#357)
+v0.9.0|2026-10-20|Jesus Soto (DevOps)|v0.9.0 - Versionado SemVer y candidata a 1.0.0 (AB#356)
+v0.9.1|2026-10-20|Jesus Soto (DevOps)|v0.9.1 - Correccion del despliegue con ZIP de builds anteriores en el agente autohospedado (AB#371)
+v1.0.0|2026-10-25|Jesus Soto|v1.0.0 - Primera version estable
+v1.1.0|2026-10-25|Jesus Soto|v1.1.0 - Inicio de sesion con roles, permisos por categoria y asignacion automatica

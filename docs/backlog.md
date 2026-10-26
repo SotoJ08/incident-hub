@@ -1,7 +1,9 @@
 # Backlog (Azure Boards)
 
 Proceso: **Agile**. Estimación en horas (Tasks) y puntos (Stories). Responsable: roles del equipo (ver README).
-Total: 2 Epics, 4 Features, 8 User Stories, 16 Tasks.
+Total del **plan inicial**: 2 Epics, 4 Features, 8 User Stories, 16 Tasks.
+
+> **Estado final del tablero (25 de octubre de 2026):** 62 elementos: 2 Epics, 5 Features, 12 User Stories, 40 Tasks y 3 Bugs. Además del plan inicial se añadieron la Feature de autenticación (AB#375), la historia de deuda técnica (AB#360, con 9 tareas), 3 Bugs reales (AB#358, AB#371, AB#374) y tareas de documentación y release. Exportación completa con estado, prioridad, estimación y etiquetas de rol: [evidencia/backlog-azure-boards.csv](evidencia/backlog-azure-boards.csv).
 
 ## Epic 1 - Plataforma de gestión de incidentes
 

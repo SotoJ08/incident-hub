@@ -1,0 +1,14 @@
+CONTRIBUCIONES POR AUTOR (commits en main, sin merges de PR) - generado desde git
+
+    22	2311686 - JESUS EDUARDO SOTO <jsoto1@miumg.edu.gt>
+    11	Edd210 <chuzgamer08@gmail.com>
+     9	Jesus Soto <jsoto1@miumg.edu.gt>
+     3	DharaGar29 <sotojesuseduardo8@gmail.com>
+     1	SotoJ08 <jsoto1@miumg.edu.gt>
+
+Atribucion en GitHub (cuenta enlazada por correo verificado), commits recientes de main:
+  SotoJ08: 32 commits
+  Edd210: 11 commits
+  DharaGar29: 3 commits
+
+Total de commits (sin merges) en GitHub main: 46
