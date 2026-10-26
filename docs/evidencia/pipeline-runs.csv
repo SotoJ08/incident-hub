@@ -1,0 +1,50 @@
+run,rama,resultado,disparo,inicio_utc,fin_utc
+5,main,succeeded,manual,2026-10-17T21:39,2026-10-17T21:40
+6,fix/358-orden-listado,failed,manual,2026-10-17T22:07,2026-10-17T22:08
+7,fix/358-orden-listado,succeeded,manual,2026-10-17T22:08,2026-10-17T22:09
+8,main,succeeded,individualCI,2026-10-17T22:10,2026-10-17T22:11
+9,feature/345-lista-filtros-react,succeeded,manual,2026-10-17T22:27,2026-10-17T22:28
+10,main,succeeded,individualCI,2026-10-17T23:04,2026-10-17T23:05
+11,feature/346-asignacion-transiciones,succeeded,manual,2026-10-17T23:06,2026-10-17T23:07
+12,main,succeeded,individualCI,2026-10-17T23:16,2026-10-17T23:17
+13,feature/348-comentarios-bitacora,succeeded,manual,2026-10-17T23:17,2026-10-17T23:19
+14,main,succeeded,individualCI,2026-10-17T23:24,2026-10-17T23:25
+15,feature/350-stats,succeeded,manual,2026-10-17T23:25,2026-10-17T23:27
+16,main,succeeded,individualCI,2026-10-17T23:27,2026-10-17T23:28
+17,feature/351-dashboard-react,succeeded,manual,2026-10-17T23:28,2026-10-17T23:30
+18,main,succeeded,individualCI,2026-10-17T23:30,2026-10-17T23:32
+19,feature/347-ui-asignacion-estado,succeeded,manual,2026-10-17T23:32,2026-10-17T23:33
+20,feature/349-historial-incidente,succeeded,manual,2026-10-17T23:33,2026-10-17T23:35
+21,main,succeeded,individualCI,2026-10-17T23:35,2026-10-17T23:37
+22,main,succeeded,individualCI,2026-10-17T23:37,2026-10-17T23:38
+23,feature/359-form-crear-incidente,succeeded,manual,2026-10-17T23:59,2026-10-18T00:00
+24,main,succeeded,individualCI,2026-10-18T00:06,2026-10-18T00:07
+25,refactor/361-usenode,succeeded,manual,2026-10-18T00:07,2026-10-18T00:09
+26,refactor/362-workflow-fuente-unica,succeeded,manual,2026-10-18T00:09,2026-10-18T00:10
+27,main,succeeded,individualCI,2026-10-18T00:26,2026-10-18T00:27
+28,main,succeeded,individualCI,2026-10-18T00:27,2026-10-18T00:29
+29,main,succeeded,individualCI,2026-10-18T00:29,2026-10-18T00:30
+30,feature/355-secretos,succeeded,manual,2026-10-18T00:50,2026-10-18T00:51
+31,main,succeeded,individualCI,2026-10-18T19:04,2026-10-18T19:06
+32,main,inProgress (espera aprobacion de staging),individualCI,2026-10-18T19:06,
+33,feature/356-versionado,succeeded,manual,2026-10-20T21:44,2026-10-20T21:46
+34,main,failed,individualCI,2026-10-20T21:48,2026-10-20T21:49
+35,docs/370-readme-arquitectura,succeeded,manual,2026-10-20T21:49,2026-10-20T21:51
+36,fix/371-zip-por-build,succeeded,manual,2026-10-20T21:52,2026-10-20T21:54
+37,main,inProgress (espera aprobacion de staging),individualCI,2026-10-20T21:54,
+38,main,failed,individualCI,2026-10-25T05:45,2026-10-25T05:46
+39,docs/372-equipo-3-integrantes,failed,manual,2026-10-25T05:47,2026-10-25T05:48
+40,fix/374-body-parser,succeeded,manual,2026-10-25T05:52,2026-10-25T05:53
+41,main,inProgress (espera aprobacion de staging),individualCI,2026-10-25T05:53,
+42,docs/372-equipo-3-integrantes,succeeded,manual,2026-10-25T05:55,2026-10-25T05:56
+43,release/373-v1.0.0,succeeded,manual,2026-10-25T05:56,2026-10-25T05:57
+44,feature/379-auth-core,succeeded,manual,2026-10-25T05:58,2026-10-25T05:59
+45,main,inProgress (espera aprobacion de staging),individualCI,2026-10-25T05:59,
+46,main,inProgress (espera aprobacion de staging),individualCI,2026-10-25T06:00,
+47,feature/383-permisos-y-asignacion,succeeded,manual,2026-10-25T06:02,2026-10-25T06:04
+48,feature/381-login-ui,failed,manual,2026-10-25T06:08,2026-10-25T06:08
+49,feature/381-login-ui,canceled,manual,2026-10-25T06:11,2026-10-25T06:11
+50,feature/381-login-ui,succeeded,manual,2026-10-25T06:11,2026-10-25T06:13
+51,release/389-v1.1.0,succeeded,manual,2026-10-25T06:13,2026-10-25T06:15
+52,feature/login-roles,succeeded,manual,2026-10-26T03:37,2026-10-26T03:39
+53,main,inProgress (espera aprobacion de staging),individualCI,2026-10-26T03:39,

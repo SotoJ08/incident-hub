@@ -1,0 +1,31 @@
+pr,estado,origen,destino,titulo,work_items,revision,creado_utc,cerrado_utc
+1,completed,"feature/342-modelo-datos","main","feat: modelo de datos y migracion inicial AB#342","AB#342",aprobado,2026-10-17T21:14,2026-10-17T21:17
+2,completed,"feature/343-endpoints-incidentes","main","feat: endpoints POST/GET de incidentes AB#343","AB#343",aprobado,2026-10-17T21:16,2026-10-17T21:19
+3,completed,"feature/344-filtros-listado","main","feat: filtros del listado de incidentes AB#344","AB#344",aprobado,2026-10-17T21:21,2026-10-17T21:21
+4,completed,"feature/352-azure-pipeline","main","ci: pipeline de Azure Pipelines AB#352","AB#352",aprobado,2026-10-17T21:22,2026-10-17T21:24
+5,completed,"feature/353-github-actions","main","ci: workflow de GitHub Actions AB#353","AB#353",aprobado,2026-10-17T21:22,2026-10-17T21:24
+6,completed,"fix/358-orden-listado","main","fix: orden del listado de incidentes AB#358","AB#358",aprobado,2026-10-17T22:07,2026-10-17T22:10
+7,completed,"feature/345-lista-filtros-react","main","feat: frontend React con lista de incidentes y filtros AB#345","AB#345",aprobado,2026-10-17T22:27,2026-10-17T23:04
+8,completed,"feature/346-asignacion-transiciones","main","feat: asignacion de tecnico y transiciones de estado AB#346","AB#346",aprobado,2026-10-17T23:06,2026-10-17T23:16
+9,completed,"feature/348-comentarios-bitacora","main","feat: comentarios y bitacora por incidente AB#348","AB#348",aprobado,2026-10-17T23:17,2026-10-17T23:24
+10,completed,"feature/350-stats","main","feat: endpoint de indicadores /api/stats AB#350","AB#350",aprobado,2026-10-17T23:25,2026-10-17T23:27
+11,completed,"feature/351-dashboard-react","main","feat: dashboard de indicadores en React AB#351","AB#351",aprobado,2026-10-17T23:28,2026-10-17T23:30
+12,completed,"feature/347-ui-asignacion-estado","main","feat: UI de asignacion y cambio de estado AB#347","AB#347",aprobado,2026-10-17T23:32,2026-10-17T23:35
+13,completed,"feature/349-historial-incidente","main","feat: historial del incidente con comentarios AB#349","AB#349",aprobado,2026-10-17T23:33,2026-10-17T23:36
+14,completed,"feature/359-form-crear-incidente","main","feat: formulario React para crear incidentes AB#359","AB#359",aprobado,2026-10-17T23:59,2026-10-18T00:06
+15,completed,"refactor/361-usenode","main","refactor(ci): migrar NodeTool@0 a UseNode@1 AB#361","AB#361",aprobado,2026-10-18T00:07,2026-10-18T00:26
+16,completed,"refactor/362-workflow-fuente-unica","main","refactor: reglas del flujo con una sola fuente de verdad AB#362","AB#362",aprobado,2026-10-18T00:08,2026-10-18T00:26
+17,completed,"docs/360-deuda-tecnica","main","docs: deuda tecnica real registrada y resuelta AB#360","AB#360",aprobado,2026-10-18T00:09,2026-10-18T00:27
+18,completed,"feature/355-secretos","main","feat: secretos en variable group protegido y GitHub Secrets AB#355","AB#355",aprobado,2026-10-18T00:29,2026-10-18T19:04
+19,completed,"feature/357-ambientes","main","feat: ambientes dev, staging y prod con aprobaciones AB#357","AB#357",aprobado,2026-10-18T00:32,2026-10-18T19:05
+20,completed,"feature/356-versionado","main","build: versionado SemVer, CHANGELOG y version 0.9.0 AB#356","AB#356",aprobado,2026-10-20T21:44,2026-10-20T21:48
+21,completed,"docs/370-readme-arquitectura","main","docs: README completo y documentacion de arquitectura AB#370","AB#370",aprobado,2026-10-20T21:49,2026-10-25T05:44
+22,completed,"fix/371-zip-por-build","main","fix(devops): desplegar el zip exacto de la build AB#371","AB#371",aprobado,2026-10-20T21:52,2026-10-20T21:54
+23,completed,"docs/372-equipo-3-integrantes","main","docs: equipo de 3 integrantes con cuentas distintas AB#372","AB#372",aprobado,2026-10-25T05:47,2026-10-25T05:57
+24,completed,"release/373-v1.0.0","main","build: release v1.0.0 AB#373","AB#373",aprobado,2026-10-25T05:48,2026-10-25T06:00
+25,completed,"fix/374-body-parser","main","fix(deps): body-parser 1.20.9 por vulnerabilidad alta AB#374","AB#374",aprobado,2026-10-25T05:51,2026-10-25T05:53
+26,completed,"feature/379-auth-core","feature/login-roles","feat: nucleo de autenticacion: login, token y credenciales AB#379 AB#380","AB#379 AB#380 AB#382",aprobado,2026-10-25T05:56,2026-10-25T06:02
+27,completed,"feature/383-permisos-y-asignacion","feature/login-roles","feat: permisos por rol, visibilidad por categoria y asignacion automatica AB#383 AB#386","AB#383 AB#385 AB#386 AB#388",aprobado,2026-10-25T06:02,2026-10-25T06:07
+28,completed,"feature/381-login-ui","feature/login-roles","feat: login, interfaz por rol y asignacion automatica visible AB#381 AB#384 AB#387","AB#381 AB#382 AB#384 AB#385 AB#387",aprobado,2026-10-25T06:08,2026-10-25T06:13
+29,completed,"release/389-v1.1.0","feature/login-roles","docs: release 1.1.0: seguridad, README, arquitectura, deuda D5 y version AB#389 AB#382","AB#382 AB#389",aprobado,2026-10-25T06:13,2026-10-26T03:37
+30,completed,"feature/login-roles","main","feat: v1.1.0 login con roles, permisos por categoria y asignacion automatica AB#375","AB#365 AB#375 AB#376 AB#377 AB#378",aprobado,2026-10-26T03:37,2026-10-26T03:39
