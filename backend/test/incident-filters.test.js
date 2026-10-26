@@ -1,25 +1,16 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const fs = require('fs');
-const path = require('path');
-const request = require('supertest');
-const { newDb } = require('pg-mem');
-const { migrate } = require('../src/migrate');
-const { createApp } = require('../src/app');
+const { crearEntorno, insertarIncidente } = require('./helpers');
 
-// Siembra 4 incidentes con combinaciones distintas de estado, prioridad, categoria y tecnico
+// Siembra 4 incidentes con combinaciones distintas de estado, prioridad, categoria y tecnico.
+// Todas las pruebas consultan como administrador, que ve todo (la visibilidad por rol se prueba en permissions.test.js).
 async function setup() {
-  const { Client } = newDb().adapters.createPg();
-  const db = new Client();
-  await db.connect();
-  await migrate(db);
-  await db.query(fs.readFileSync(path.join(__dirname, '..', '..', 'database', 'seed.sql'), 'utf8'));
-  await db.query(`INSERT INTO incidents (titulo, descripcion, category_id, prioridad, estado, solicitante_id, tecnico_id) VALUES
-    ('a', 'd', 1, 'BAJA',    'NUEVO',      1, NULL),
-    ('b', 'd', 1, 'CRITICA', 'ASIGNADO',   1, 2),
-    ('c', 'd', 2, 'CRITICA', 'EN_PROCESO', 1, 3),
-    ('d', 'd', 2, 'ALTA',    'CERRADO',    1, 2)`);
-  return request(createApp(db));
+  const env = await crearEntorno();
+  await insertarIncidente(env.db, { titulo: 'a', category_id: 1, prioridad: 'BAJA', estado: 'NUEVO', tecnico_id: null });
+  await insertarIncidente(env.db, { titulo: 'b', category_id: 1, prioridad: 'CRITICA', estado: 'ASIGNADO', tecnico_id: 2 });
+  await insertarIncidente(env.db, { titulo: 'c', category_id: 2, prioridad: 'CRITICA', estado: 'EN_PROCESO', tecnico_id: 3 });
+  await insertarIncidente(env.db, { titulo: 'd', category_id: 2, prioridad: 'ALTA', estado: 'CERRADO', tecnico_id: 2 });
+  return env.admin;
 }
 
 const titulos = (res) => res.body.map((i) => i.titulo).sort();
