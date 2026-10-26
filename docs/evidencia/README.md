@@ -7,7 +7,7 @@ Datos reales exportados el **25 de octubre de 2026** de Azure DevOps, GitHub y G
 | `backlog-azure-boards.csv` | 62 Work Items: tipo, estado, padre, título, prioridad, puntos, estimación, responsable y etiquetas | Azure Boards (WIQL + `_apis/wit/workitems`) |
 | `pull-requests.csv` | 30 PR: ramas, título, Work Items vinculados, revisión y fechas | Azure Repos (`_apis/git/.../pullrequests`) |
 | `pipeline-runs.csv` | 49 corridas de `incident-hub-ci`: rama, resultado, disparo y horas (fallidas: #6, #34, #38, #39, #48) | Azure Pipelines (`_apis/build/builds`) |
-| `github-actions-runs.csv` | 19 ejecuciones de GitHub Actions | API pública de GitHub |
+| `github-actions-runs.csv` | 20 ejecuciones de GitHub Actions: 19 por `push` a `main` y 1 por `pull_request` (PR #1 de GitHub) | API pública de GitHub |
 | `historial-git.csv` | Todos los commits (sin merges): hash, autor, correo, fecha, mensaje con `AB#ID` | `git log` |
 | `contribuciones.txt` | Commits por autor en `main` y cuenta de GitHub enlazada | `git shortlog` + API de GitHub |
 | `tags.txt` | 13 tags anotados `v0.1.0` a `v1.1.0` | `git for-each-ref` |

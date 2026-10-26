@@ -18,3 +18,4 @@ run_id,evento,rama,resultado,commit,fecha_utc
 40167193690,push,main,success,5f88b5e,2026-10-25T05:54
 40167597127,push,main,success,4061e91,2026-10-25T06:01
 40265165545,push,main,success,8bd843e,2026-10-26T03:39
+40265516362,pull_request,docs/390-entrega,success,55bff74,2026-10-26T03:44
