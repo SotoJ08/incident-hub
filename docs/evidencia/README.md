@@ -20,5 +20,5 @@ Datos reales exportados el **25 de octubre de 2026** de Azure DevOps, GitHub y G
 
 ## Qué mirar
 - **Fallos controlados:** corridas #6, #34, #38, #39 y #48 (fallidas) y las que las siguen en verde; ver `../ci-failure-diagnosis.md`.
-- **Corridas "inProgress" de `main`:** esperan la aprobación manual de staging (el control funciona como se diseñó).
+- **Corridas "inProgress" de `main`:** las intermedias antiguas esperan la aprobación manual de staging (el control funciona como se diseñó). La corrida final 20261026.5 fue aprobada y llegó a prod en verde.
 - **Autoría:** `contribuciones.txt` muestra los commits enlazados a las tres cuentas.

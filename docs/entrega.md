@@ -56,11 +56,11 @@ Frontend React → API REST Node/Express → PostgreSQL, tal como el enunciado. 
 | 10 | **GitHub Actions**: workflow complementario | **Cumple** | `.github/workflows/ci.yml` (PR y push: pruebas, build, `npm audit`, escáner de secretos, referencia a Work Item); `docs/evidencia/github-actions-runs.csv`. **Ejecución disparada por un Pull Request de GitHub:** PR #1 de GitHub (rama `docs/390-entrega`), run `40265516362`, evento `pull_request`, resultado `success` |
 | 11 | **Dependencias**: analizar, documentar vulnerabilidades, severidad y decisión | **Cumple** | [dependencies.md](dependencies.md): vite/vitest (high y critical, solo desarrollo) y body-parser (high, producción) |
 | 12 | **Versionado**: SemVer con secuencia coherente hasta v1.0.0 | **Cumple** | 13 tags anotados `v0.1.0` → `v1.1.0` y `CHANGELOG.md`; la prueba `tests/versions.test.js` impide versiones incoherentes |
-| 13 | **Lanzamiento**: estrategia con ambientes y controles de aprobación/validación | **Cumple parcialmente** | [release-strategy.md](release-strategy.md). Ambientes `dev`, `staging` y `prod` con check de aprobación; **dev se despliega solo y se valida**. La aprobación de staging y prod es manual y depende de la persona responsable (ver «Estado de los ambientes») |
+| 13 | **Lanzamiento**: estrategia con ambientes y controles de aprobación/validación | **Cumple** | [release-strategy.md](release-strategy.md). Ambientes `dev`, `staging` y `prod` con check de aprobación; **dev se despliega solo y se valida**. La aprobación de staging y prod es manual; la corrida final fue aprobada y desplegada (ver «Estado de los ambientes») |
 
 ### Estado de los ambientes
 - **dev:** desplegado automáticamente por cada corrida de `main` (releases `0.9.1-b37` y posteriores en `_work/deploy/dev` del agente), con validación posterior y rollback probado.
-- **staging y prod:** el pipeline se **detiene a esperar la aprobación humana**, que es el control diseñado. Las corridas de `main` quedan en espera hasta que la persona responsable las aprueba en Azure DevOps (Pipelines → corrida → *Review*). La infraestructura y el control existen y están configurados; si en el momento de la revisión no se aprobó una corrida, ese paso queda pendiente y no se ha simulado.
+- **staging y prod:** el pipeline se **detiene a esperar la aprobación humana**, que es el control diseñado. Las corridas de `main` quedan en espera hasta que la persona responsable las aprueba en Azure DevOps (Pipelines → corrida → *Review*). **La corrida final de `main` (20261026.5, que incluye la entrega v1.1.0) fue aprobada por el responsable del proyecto (25 oct 2026) y completó dev → staging → prod en verde.** Las corridas intermedias anteriores de `main` se dejaron sin aprobar a propósito, para no desplegar versiones viejas sobre la actual.
 - El despliegue es **local** (carpetas versionadas por ambiente en el agente), no un servidor externo: está dicho en el README y en `release-strategy.md`.
 
 ## 5. Organización del repositorio
@@ -100,7 +100,7 @@ El enunciado prevé tres semanas; el desarrollo real se **comprimió en 9 días*
 | Defensa: modificación o explicación de cualquier integrante | Para la defensa se incluye `docs/architecture.md`, `docs/security.md` y `LOCAL-DEMO/` para ejecutar el sistema |
 
 ## Limitaciones conocidas (honestas)
-- **Staging y prod** requieren aprobación humana pendiente en Azure DevOps (ver arriba).
+- **Staging y prod:** aprobados solo para la corrida final 20261026.5; las corridas intermedias antiguas siguen en espera (ver arriba).
 - **Revisión de PR:** la misma identidad de Azure aprueba y fusiona (proyecto individual).
 - **Pruebas con pg-mem**, no con PostgreSQL real (deuda D4); las instrucciones de Docker no se han ejecutado de punta a punta contra PostgreSQL real.
 - **Despliegue local**, no en un servidor externo.
