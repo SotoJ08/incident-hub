@@ -8,6 +8,7 @@ Documento de entrega del **Proyecto integrador DevOps "IT Incident Hub"**. Contr
 | Repositorio (GitHub) | https://github.com/SotoJ08/incident-hub |
 | Proyecto Azure DevOps | https://dev.azure.com/jsoto1/incident-hub (Boards, Repos, Pipelines, Environments) |
 | Repositorios | **Uno solo** con hitos por versión (indicado por el docente en lugar de 3 repositorios semanales) |
+| Documento técnico | [Word](IT-Incident-Hub-Documentacion.docx) y [PDF](IT-Incident-Hub-Documentacion.pdf): documento de análisis, diseño y operación con 7 diagramas, requerimientos, casos de uso, API, seguridad, DevOps, pruebas, manuales y matriz de trazabilidad |
 | Equipo | 3 integrantes simulados con cuentas distintas: SotoJ08, DharaGar29 y Edd210 |
 | Pruebas | Backend 108 · Frontend 67 · Utilidades DevOps 27 (202 en total), todas en verde |
 

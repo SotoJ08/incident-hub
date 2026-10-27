@@ -8,6 +8,7 @@ Cada entrada indica los Work Items (`AB#ID`) y Pull Requests que la componen. Lo
 > (la fecha del tag es la de su creación; la fecha de cada commit es la real).
 
 ## [Sin publicar]
+- Documentación profesional en Word y PDF (`docs/IT-Incident-Hub-Documentacion.*`): análisis, diseño, API, seguridad, DevOps, pruebas, manuales y trazabilidad, con 7 diagramas (AB#391).
 - Siguientes mejoras (ver `docs/technical-debt.md`): pruebas contra PostgreSQL real y transacciones (D3, D4), límite de intentos de login y revocación de tokens (D10, D11), paginación (D7).
 
 ## [1.1.0] - 2026-10-25
