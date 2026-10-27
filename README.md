@@ -133,6 +133,7 @@ Detalle en [docs/architecture.md](docs/architecture.md).
 - **Seguridad y dependencias:** [docs/security.md](docs/security.md), [docs/dependencies.md](docs/dependencies.md).
 - **Release:** [docs/release-strategy.md](docs/release-strategy.md): dev (automático), staging y prod con aprobación, rollback.
 - **Deuda técnica:** [docs/technical-debt.md](docs/technical-debt.md).
+- **Documentación profesional completa** (análisis, diseño, API, seguridad, DevOps, pruebas, manuales y trazabilidad, con diagramas): [Word](docs/IT-Incident-Hub-Documentacion.docx) · [PDF](docs/IT-Incident-Hub-Documentacion.pdf).
 
 ## Repositorios
 - GitHub: https://github.com/SotoJ08/incident-hub
